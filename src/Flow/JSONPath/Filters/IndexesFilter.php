@@ -7,12 +7,12 @@ class IndexesFilter extends AbstractFilter
      * @param $collection
      * @return array
      */
-    public function filter(array $collection)
+    public function filter($collection)
     {
         $return = [];
         foreach ($this->value as $index) {
-            if (isset($data[$index])) {
-                $return[] = $data[$index];
+            if ($this->keyExists($collection, $index)) {
+                $return[] = $this->getValue($collection, $index);
             }
         }
         return $return;

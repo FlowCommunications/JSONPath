@@ -5,25 +5,32 @@ This is a [JSONPath](http://goessner.net/articles/JsonPath/) implementation for 
 
 JSONPath is an XPath-like expression language for filtering, flattening and extracting data.
 
-I believe that is improves on the original script (which was last updated in 2007) by parsing a set of tokens using
-some fancy RegEx techniques appropriated from the Doctrine Lexer library. These tokens are cached in a static variable and performance is
-generally about 2&ndash;5 &times; faster (I haven't gone to explore why it is quicker but that's just how it turned out). Lastly, there is no `eval()` anywhere in sight (hoorah).
+I believe that is improves on the original script (which was last updated in 2007) by doing a few things:
+
+-   Object-oriented code (should be easier to manage or extend in future)
+-   Expressions are parsed into tokens using some code cribbed from Doctrine Lexer and cached
+-   There is no `eval()` in use
+-   Performance is faster over tight loops (because of the token cache)... however performance is a little slower in isolation*
+-   Any combination of objects/arrays/ArrayAccess-objects can be used as the data input which is great if you're deserializing JSON in to objects
+    or if you want to process your own data structures.
+
+\* Performance was universally quicker until support for using objects as input... we just can't have nice things without hurting performance.
 
 JSONPath Examples
 ---
 
-JSONPath                | Result
-------------------------|-------------------------------------
+JSONPath                 | Result
+-------------------------|-------------------------------------
 $.store.books[\*].author | the authors of all books in the store
-$..author               | all authors
-$.store..price          | the price of everything in the store.
-$..books[2]             | the third book
-$..books[(@.length-1)]  | the last book in order.
-$..books[0,1]           | the first two books
-$..books[:2]            | the first two books
-$..books[?(@.isbn)]     | filter all books with isbn number
-$..books[?(@.price<10)] | filter all books cheapier than 10
-$..*                    | all elements in the data (recursively extracted)
+$..author                | all authors
+$.store..price           | the price of everything in the store.
+$..books[2]              | the third book
+$..books[(@.length-1)]   | the last book in order.
+$..books[0,1]            | the first two books
+$..books[:2]             | the first two books
+$..books[?(@.isbn)]      | filter all books with isbn number
+$..books[?(@.price<10)]  | filter all books cheapier than 10
+$..*                     | all elements in the data (recursively extracted)
 
 
 Expression syntax
@@ -50,14 +57,33 @@ $result = (new JSONPath($data))->find('$.people.*.name');
 // $result === ['Joe', 'Jane', 'John']
 ```
 
+### Magic method access
+
+The options flag `JSONPath::ALLOW_MAGIC` will instruct JSONPath when retrieving a value to first check if an object
+has a magic `__get()` method and will call this method if available. This feature is *iffy* and
+not very predictable as:
+
+-  wildcard and recursive features will only look at public properties and can't smell which properties are magically accessible
+-  there is no `property_exists` check for magic methods so an object with a magic `__get()` will always return `true` when checking
+   if the property exists
+-   any errors thrown or unpredictable behaviour caused by fetching via `__get()` is your own problem to deal with
+
+```php
+$jsonPath = new JSONPath($myObject, JSONPath::ALLOW_MAGIC);
+```
+
 For more examples, check the JSONPathTest.php tests file.
 
-Caveats
+Script expressions
 -------
--   Only arrays are supported at this point which means you will need to stick to `json_decode($json, true)`. I intend to add support for objects at this point but this is just my first pass at this library.
--   "script expressions" are not *exactly* supported but there is some functionality that mimicks scripting (read below)
 
-The one thing that this implementation does not fully support is the "script expression using the underlying script engine". You could call me overly-cautious but I don't want to eval anything in PHP. So here are the types of query expressions that are supported:
+Script expressions are not supported as the original author intended because:
+
+-   This would only be achievabel through `eval` (boo).
+-   Using the script engine from different languages defeats the purpose of having a single expression evaluate the same way in different
+    languages which seems like a bit of a flaw if you're creating an abstract expression syntax.
+
+So here are the types of query expressions that are supported:
 
 	[?(@._KEY_ _OPERATOR_ _VALUE_)] // <, >, !=, and ==
 	Eg.

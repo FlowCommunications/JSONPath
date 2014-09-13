@@ -7,14 +7,14 @@ class IndexFilter extends AbstractFilter
      * @param array $collection
      * @return array
      */
-    public function filter(array $collection)
+    public function filter($collection)
     {
         $return = [];
 
-        if (array_key_exists($this->value, $collection)) {
-            $return[] = $collection[$this->value];
+        if ($this->keyExists($collection, $this->value)) {
+            $return[] = $this->getValue($collection, $this->value);
         } else if ($this->value === "*") {
-            return array_values($collection);
+            return $this->arrayValues($collection);
         }
 
         return $return;

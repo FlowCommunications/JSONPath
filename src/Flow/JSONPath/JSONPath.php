@@ -9,17 +9,20 @@ class JSONPath
     protected static $tokenCache = [];
 
     protected $data;
+    protected $options;
 
-    public function __construct($data)
+    const ALLOW_MAGIC = 1;
+
+    public function __construct($data, $options = 0)
     {
         $this->data = $data;
+        $this->options = $options;
     }
 
     /**
      * Evaluate an expression
      * @param $expression
      * @return array
-     * @throws \Exception
      */
     public function find($expression)
     {
@@ -35,13 +38,20 @@ class JSONPath
             $filteredData = [];
 
             foreach ($collectionData as $value) {
-                $filteredData = array_merge($filteredData, $filter->filter($value));
+                if ($this->isFilterable($value)) {
+                    $filteredData = array_merge($filteredData, $filter->filter($value));
+                }
             }
 
             $collectionData = $filteredData;
         }
 
         return $collectionData;
+    }
+
+    public function isFilterable($value)
+    {
+        return is_array($value) || is_object($value);
     }
 
     /**
@@ -80,7 +90,7 @@ class JSONPath
             throw new JSONPathException("No filter class exists for token [{$token['type']}]");
         }
 
-        return new $filterClass($token['value']);
+        return new $filterClass($token['value'], $this->options);
     }
 
     /**

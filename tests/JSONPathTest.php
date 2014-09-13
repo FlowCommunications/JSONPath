@@ -1,25 +1,14 @@
 <?php
 namespace Flow\JSONPath;
 
+require_once __DIR__ . "/../vendor/autoload.php";
+
 use Flow\JSONPath\JSONPath;
 use Flow\JSONPath\JSONPathLexer;
 use \Peekmo\JsonPath\JsonPath as PeekmoJsonPath;
 
 class JSONPathTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLexIndex()
-    {
-        $tokens = (new \Flow\JSONPath\JSONPathLexer('[0]'))->parseExpression();
-        $this->assertEquals(JSONPathLexer::T_INDEX, $tokens[0]['type']);
-        $this->assertEquals("0", $tokens[0]['value']);
-    }
-
-    public function testLexSlice()
-    {
-        $tokens = (new \Flow\JSONPath\JSONPathLexer('[-1]'))->parseExpression();
-        $this->assertEquals(JSONPathLexer::T_SLICE, $tokens[0]['type']);
-        $this->assertEquals(['start' => -1, 'end' => null, 'step' => null], $tokens[0]['value']);
-    }
 
     /**
      * $.store.books[0].title
@@ -117,8 +106,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryMatchEquals()
     {
-        $results = (new JSONPath($this->exampleData()))->find('$..books[?(@.author == "J. R. R. Tolkien")]');
-        $this->assertEquals($results[0]['title'], 'The Lord of the Rings');
+        $results = (new JSONPath($this->exampleData()))->find('$..books[?(@.author == "J. R. R. Tolkien")].title');
+        $this->assertEquals($results[0], 'The Lord of the Rings');
     }
 
     /**
@@ -147,8 +136,17 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     public function testWildCard()
     {
         $result = (new JSONPath($this->exampleData()))->find("$.store.*");
-        $this->assertEquals('Sayings of the Century', $result[0][0]['title']);
-        $this->assertEquals('red', $result[1]['color']);
+        if (is_object($result[0][0])) {
+            $this->assertEquals('Sayings of the Century', $result[0][0]->title);
+        } else {
+            $this->assertEquals('Sayings of the Century', $result[0][0]['title']);
+        }
+
+        if (is_object($result[1])) {
+            $this->assertEquals('red', $result[1]->color);
+        } else {
+            $this->assertEquals('red', $result[1]['color']);
+        }
     }
 
     /**
@@ -208,9 +206,18 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     public function testRecursiveWithWildcard()
     {
         $result = (new JSONPath($this->exampleData()))->find("$..*");
+        $result = json_decode(json_encode($result), true);
 
         $this->assertEquals('Sayings of the Century', $result[0]['books'][0]['title']);
         $this->assertEquals(19.95, $result[26]);
+    }
+
+    public function testFilteringOnNoneArrays()
+    {
+        $data = ['foo' => 'asdf'];
+
+        $result = (new JSONPath($data))->find("$.foo.bar");
+        $this->assertEquals([], $result);
     }
 
     public function testBenchmark()
@@ -293,6 +300,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         }
         $end1 = microtime(true);
 
+        $exampleData = $this->exampleData(true);
+
         $start2 = microtime(true);
         for ($i = 0; $i < 1; $i += 1) {
             $results2 = (new JSONPath($exampleData))->find('$..price');
@@ -305,8 +314,17 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;
     }
 
+    public function testMagicMethods()
+    {
+        $fooClass = new JSONPathTestClass();
 
-    public function exampleData()
+        $results = (new JSONPath($fooClass, JSONPath::ALLOW_MAGIC))->find('$.foo');
+
+        $this->assertEquals(['bar'], $results);
+    }
+
+
+    public function exampleData($asArray = true)
     {
         $json = <<<JSON
         {
@@ -346,7 +364,18 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
           }
         }
 JSON;
-        return json_decode($json, true);
+        return json_decode($json, $asArray);
     }
 }
- 
+
+class JSONPathTestClass
+{
+    protected $attributes = [
+        'foo' => 'bar'
+    ];
+
+    public function __get($key)
+    {
+        return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
+    }
+}

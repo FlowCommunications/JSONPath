@@ -1,22 +1,25 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\JSONPathException;
+
 class QueryResultFilter extends AbstractFilter
 {
 
     /**
      * @param array $collection
-     * @throws \Exception
      * @return array
      */
-    public function filter(array $collection)
+    public function filter($collection)
     {
         $result = [];
 
         preg_match('/@\.(?<key>\w+)\s*(?<operator>-|\+|\*|\/)\s*(?<numeric>\d+)/', $this->value, $matches);
 
-        if (array_key_exists($matches['key'], $collection)) {
-            $value = $collection[$matches['key']];
+        $matchKey = $matches['key'];
+
+        if ($this->keyExists($collection, $matchKey)) {
+            $value = $this->getValue($collection, $matchKey);
         } else {
             if ($matches['key'] === 'length') {
                 $value = count($collection);
@@ -39,12 +42,12 @@ class QueryResultFilter extends AbstractFilter
                 $resultKey = $value / $matches['numeric'];
                 break;
             default:
-                throw new \Exception("Unsupported operator in expression");
+                throw new JSONPathException("Unsupported operator in expression");
                 break;
         }
 
-        if (array_key_exists($resultKey, $collection)) {
-            $result[] = $collection[$resultKey];
+        if ($this->keyExists($collection, $resultKey)) {
+            $result[] = $this->getValue($collection, $resultKey);
         }
 
         return $result;

@@ -9,7 +9,7 @@ class QueryMatchFilter extends AbstractFilter
      * @throws \Exception
      * @return array
      */
-    public function filter(array $collection)
+    public function filter($collection)
     {
         $return = [];
 
@@ -37,10 +37,10 @@ class QueryMatchFilter extends AbstractFilter
         $value2 = preg_replace('/[\'"]$/', '', $value2);
 
         foreach ($collection as $value) {
-            if (array_key_exists($key, $value)) {
-                $value1 = isset($value[$key]) ? $value[$key] : null;
+            if ($this->keyExists($value, $key)) {
+                $value1 = $this->getValue($value, $key);
 
-                if ($operator === null && array_key_Exists($key, $value)) {
+                if ($operator === null && $this->keyExists($value, $key)) {
                     $return[] = $value;
                 }
 

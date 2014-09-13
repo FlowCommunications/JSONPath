@@ -8,7 +8,7 @@ class SliceFilter extends AbstractFilter
      * @param $collection
      * @return array
      */
-    public function filter(array $collection)
+    public function filter($collection)
     {
         /*
 
@@ -63,7 +63,7 @@ class SliceFilter extends AbstractFilter
                 $index = $length + $i;
             }
 
-            if (is_array($collection) && array_key_exists($index, $collection)) {
+            if ($this->keyExists($collection, $index)) {
                 $result[] = $collection[$index];
             }
         }
