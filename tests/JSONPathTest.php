@@ -295,7 +295,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $exampleData = $this->exampleData();
 
         $start1 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
+        for ($i = 0; $i < 100; $i += 1) {
             $results1 = $goessnerJsonPath->jsonPath($exampleData, '$..price');
         }
         $end1 = microtime(true);
@@ -303,7 +303,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $exampleData = $this->exampleData(true);
 
         $start2 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
+        for ($i = 0; $i < 100; $i += 1) {
             $results2 = (new JSONPath($exampleData))->find('$..price');
         }
         $end2 = microtime(true);
@@ -321,6 +321,12 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $results = (new JSONPath($fooClass, JSONPath::ALLOW_MAGIC))->find('$.foo');
 
         $this->assertEquals(['bar'], $results);
+    }
+
+    public function testRecursiveQueryMatchWithSquareBrackets()
+    {
+        $result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'][?(@['@language']='en')]['@language']");
+        $this->assertEquals(["en"], $result);
     }
 
 
@@ -365,6 +371,24 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         }
 JSON;
         return json_decode($json, $asArray);
+    }
+
+    public function exampleDataExtra($asArray = true)
+    {
+        $json = <<<JSON
+{
+   "http://www.w3.org/2000/01/rdf-schema#label":[
+      {
+         "@language":"en"
+      },
+      {
+         "@language":"de"
+      }
+   ]
+}
+JSON;
+        return json_decode($json, $asArray);
+
     }
 }
 

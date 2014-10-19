@@ -62,7 +62,7 @@ class JSONPath
     public function first($expression)
     {
         $result = $this->find($expression);
-        return array_key_exists(0, $result) ? $result[0] : null;
+        return isset($result[0]) ? $result[0] : null;
     }
 
     /**

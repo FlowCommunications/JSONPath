@@ -38,40 +38,92 @@ class JSONPathLexer
         $this->expression = $expression;
     }
 
+    public function parseExpressionGroups()
+    {
+        $squareBracketDepth = 0;
+        $capturing = false;
+        $group = '';
+        $groups = [];
+        $token = array(
+            'value' => '',
+            'type' => '',
+        );
+
+        for ($i = 0; $i < strlen($this->expression); $i += 1) {
+            $char = $this->expression[$i];
+
+            if ($char === '.' && $squareBracketDepth === 0) {
+                if (! empty($group) && $group !== '.') {
+                    $groups[] = $group;
+                    $group = '';
+                }
+                $capturing = true;
+            }
+
+            if ($char == "[") {
+                if ($squareBracketDepth === 0) {
+                    if (! empty($group)) {
+                        $groups[] = $group;
+                        $group = '';
+                    }
+                }
+
+                $capturing = true;
+                $squareBracketDepth += 1;
+            }
+
+            if ($capturing) {
+                $group .= $this->expression[$i];
+            }
+
+
+            if ($char == "]") {
+                $squareBracketDepth -= 1;
+
+                if ($squareBracketDepth == 0) {
+                    $capturing = false;
+                    $groups[] = $group;
+                    $group = '';
+                }
+            }
+
+        }
+
+        if (! empty($group)) {
+            $groups[] = $group;
+        }
+
+        return $groups;
+    }
+
+    protected function lookAhead($pos, $forward = 1)
+    {
+        return isset($this->expression[$pos + $forward]) ? $this->expression[$pos + $forward] : null;
+    }
+
+
+
     public function parseExpression()
     {
         $tokens = [];
 
-        $regex = '/(' . implode(')|(', $this->getCatchablePatterns()) . ')/i';
+        $groups = $this->parseExpressionGroups();
 
-        $flags   = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
-        $matches = preg_split($regex, $this->expression, -1, $flags);
-
-        foreach ($matches as $match) {
+        foreach ($groups as $group) {
             // Must remain before 'value' assignment since it can change content
-            $type = $this->getType($match[0]);
+            $type = $this->getType($group);
 
             if ($type === JSONPathLexer::T_NONE) {
-                throw new JSONPathException("Unexpected token {$match[0]} at position {$match[1]} of expression: $this->expression");
+                throw new JSONPathException("Unable to parse token {$group} in expression: $this->expression");
             }
 
             $tokens[] = array(
-                'value'    => $match[0],
+                'value'    => $group,
                 'type'     => $type,
-                'position' => $match[1],
             );
         }
 
         return $tokens;
-    }
-
-    protected function getCatchablePatterns()
-    {
-        return array(
-            self::GROUP_BRACKET,
-            self::GROUP_RECURSIVE_INDEX,
-            self::GROUP_DOT_INDEX,
-        );
     }
 
     /**

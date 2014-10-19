@@ -3,6 +3,10 @@ namespace Flow\JSONPath\Filters;
 
 class QueryMatchFilter extends AbstractFilter
 {
+    const MATCH_QUERY_OPERATORS = '
+    @(\.(?<key>\w+)|\[["\'](?<keySquare>.*?)["\']\])
+    (\s*(?<operator>==|=|>|<)\s*(?<comparisonValue>\S.+))?
+    ';
 
     /**
      * @param array $collection
@@ -13,28 +17,33 @@ class QueryMatchFilter extends AbstractFilter
     {
         $return = [];
 
-        preg_match('/@\.(\w+)(\s*(==|=|>|<)\s*(\S.+))?/', $this->value, $matches);
+        preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->value, $matches);
 
         if (!isset($matches[1])) {
             throw new \Exception("Malformed filter query");
         }
 
-        $key      = $matches[1];
-        $operator = isset($matches[3]) ? $matches[3] : null;
-        $value2   = isset($matches[4]) ? $matches[4] : null;
+        $key      = $matches['key'] ?: $matches['keySquare'];
 
-        if (strtolower($value2) === "false") {
-            $value2 = false;
-        }
-        if (strtolower($value2) === "true") {
-            $value2 = true;
-        }
-        if (strtolower($value2) === "null") {
-            $value2 = null;
+        if ($key === "") {
+            throw new \Exception("Malformed filter query: key was not set");
         }
 
-        $value2 = preg_replace('/^[\'"]/', '', $value2);
-        $value2 = preg_replace('/[\'"]$/', '', $value2);
+        $operator = isset($matches['operator']) ? $matches['operator'] : null;
+        $comparisonValue   = isset($matches['comparisonValue']) ? $matches['comparisonValue'] : null;
+
+        if (strtolower($comparisonValue) === "false") {
+            $comparisonValue = false;
+        }
+        if (strtolower($comparisonValue) === "true") {
+            $comparisonValue = true;
+        }
+        if (strtolower($comparisonValue) === "null") {
+            $comparisonValue = null;
+        }
+
+        $comparisonValue = preg_replace('/^[\'"]/', '', $comparisonValue);
+        $comparisonValue = preg_replace('/[\'"]$/', '', $comparisonValue);
 
         foreach ($collection as $value) {
             if ($this->keyExists($value, $key)) {
@@ -44,16 +53,16 @@ class QueryMatchFilter extends AbstractFilter
                     $return[] = $value;
                 }
 
-                if (($operator === "=" || $operator === "==") && $value1 == $value2) {
+                if (($operator === "=" || $operator === "==") && $value1 == $comparisonValue) {
                     $return[] = $value;
                 }
-                if (($operator === "!=" || $operator === "!==") && $value1 != $value2) {
+                if (($operator === "!=" || $operator === "!==") && $value1 != $comparisonValue) {
                     $return[] = $value;
                 }
-                if ($operator == ">" && $value1 > $value2) {
+                if ($operator == ">" && $value1 > $comparisonValue) {
                     $return[] = $value;
                 }
-                if ($operator == "<" && $value1 < $value2) {
+                if ($operator == "<" && $value1 < $comparisonValue) {
                     $return[] = $value;
                 }
             }

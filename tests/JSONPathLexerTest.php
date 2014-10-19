@@ -12,9 +12,16 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("*", $tokens[0]['value']);
     }
 
+    public function test_Index_Simple()
+    {
+        $tokens = (new JSONPathLexer('.foo'))->parseExpression();
+        $this->assertEquals(JSONPathLexer::T_INDEX, $tokens[0]['type']);
+        $this->assertEquals("foo", $tokens[0]['value']);
+    }
+
     /**
      * @expectedException           Flow\JSONPath\JSONPathException
-     * @expectedExceptionMessage    Unexpected token * at position 6 of expression: .hello*
+     * @expectedExceptionMessage    Unable to parse token .hello* in expression: .hello*
      */
     public function test_Index_BadlyFormed()
     {
@@ -26,6 +33,15 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $tokens = (new \Flow\JSONPath\JSONPathLexer('[0]'))->parseExpression();
         $this->assertEquals(JSONPathLexer::T_INDEX, $tokens[0]['type']);
         $this->assertEquals("0", $tokens[0]['value']);
+    }
+
+    public function test_Index_IntegerAfterDotNotation()
+    {
+        $tokens = (new \Flow\JSONPath\JSONPathLexer('.books[0]'))->parseExpression();
+        $this->assertEquals(JSONPathLexer::T_INDEX, $tokens[0]['type']);
+        $this->assertEquals(JSONPathLexer::T_INDEX, $tokens[1]['type']);
+        $this->assertEquals("books", $tokens[0]['value']);
+        $this->assertEquals("0", $tokens[1]['value']);
     }
 
     public function test_Index_Word()
@@ -77,6 +93,15 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('@.foo < \'bar\'', $tokens[0]['value']);
     }
 
+    public function test_QueryMatch_Brackets()
+    {
+        $tokens = (new \Flow\JSONPath\JSONPathLexer("[?(@['@language']='en')]"))->parseExpression();
+
+        $this->assertEquals(JSONPathLexer::T_QUERY_MATCH, $tokens[0]['type']);
+        $this->assertEquals("@['@language']='en'", $tokens[0]['value']);
+
+    }
+
 
     public function test_Recursive_Simple()
     {
@@ -96,7 +121,7 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException           Flow\JSONPath\JSONPathException
-     * @expectedExceptionMessage    Unexpected token ^r at position 4 of expression: ..ba^r
+     * @expectedExceptionMessage    Unable to parse token ..ba^r in expression: ..ba^r
      */
     public function test_Recursive_BadlyFormed()
     {
