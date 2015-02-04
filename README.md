@@ -102,5 +102,6 @@ Changelog
 ---------
 ### 0.2.0
  - Added a heap of array access features for more creative iterating and chaining possibilities
+ 
 ### 0.1.x
  - Init
