@@ -1,6 +1,8 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\AccessHelper;
+
 class SliceFilter extends AbstractFilter
 {
 
@@ -63,7 +65,7 @@ class SliceFilter extends AbstractFilter
                 $index = $length + $i;
             }
 
-            if ($this->keyExists($collection, $index)) {
+            if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
                 $result[] = $collection[$index];
             }
         }

@@ -10,11 +10,9 @@ I believe that is improves on the original script (which was last updated in 200
 -   Object-oriented code (should be easier to manage or extend in future)
 -   Expressions are parsed into tokens using some code cribbed from Doctrine Lexer and cached
 -   There is no `eval()` in use
--   Performance is faster over tight loops (because of the token cache)... however performance is a little slower in isolation*
--   Any combination of objects/arrays/ArrayAccess-objects can be used as the data input which is great if you're deserializing JSON in to objects
+-   Performance is pretty much the same
+-   Any combination of objects/arrays/ArrayAccess-objects can be used as the data input which is great if you're de-serializing JSON in to objects
     or if you want to process your own data structures.
-
-\* Performance was universally quicker until support for using objects as input... we just can't have nice things without hurting performance.
 
 JSONPath Examples
 ---
@@ -54,7 +52,9 @@ PHP Usage
 ```php
 $data = ['people' => [['name' => 'Joe'], ['name' => 'Jane'], ['name' => 'John']]];
 $result = (new JSONPath($data))->find('$.people.*.name');
-// $result === ['Joe', 'Jane', 'John']
+// $result[0] === 'Joe'
+// $result[1] === 'Jane'
+// $result[2] === 'John'
 ```
 
 ### Magic method access
@@ -79,7 +79,7 @@ Script expressions
 
 Script expressions are not supported as the original author intended because:
 
--   This would only be achievabel through `eval` (boo).
+-   This would only be achievable through `eval` (boo).
 -   Using the script engine from different languages defeats the purpose of having a single expression evaluate the same way in different
     languages which seems like a bit of a flaw if you're creating an abstract expression syntax.
 
@@ -97,3 +97,10 @@ Similar projects
 The [Hash](http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html) utility from CakePHP does some similar things 
 
 The original JsonPath implementations is available at [http://code.google.com/p/jsonpath]() and re-hosted for composer here [Peekmo/JsonPath](https://github.com/Peekmo/JsonPath).
+
+Changelog
+---------
+### 0.2.0
+ - Added a heap of array access features for more creative iterating and chaining possibilities
+### 0.1.x
+ - Init

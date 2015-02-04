@@ -11,9 +11,11 @@
     "autoload": {
       "psr-0": {
         "Flow\\JSONPath": "src/"
+        "Flow\\JSONPath\\Test": "tests/"
       }
     },
     "require-dev": {
-      "peekmo/jsonpath": "dev-master"
+      "peekmo/jsonpath": "dev-master",
+      "phpunit/phpunit": "dev-master"
     }
 }

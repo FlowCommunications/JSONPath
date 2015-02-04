@@ -1,6 +1,8 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\AccessHelper;
+
 class RecursiveFilter extends AbstractFilter
 {
     /**
@@ -30,8 +32,8 @@ class RecursiveFilter extends AbstractFilter
         } else {
             foreach ($data as $v) {
                 if (is_array($v) || is_object($v)) {
-                    if ($this->keyExists($v, $this->value)) {
-                        $result[] = $this->getValue($v, $this->value);
+                    if (AccessHelper::keyExists($v, $this->value, $this->magicIsAllowed)) {
+                        $result[] = AccessHelper::getValue($v, $this->value, $this->magicIsAllowed);
                     }
 
                     $this->recurse($result, $v);

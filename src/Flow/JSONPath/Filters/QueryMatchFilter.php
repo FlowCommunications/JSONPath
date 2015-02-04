@@ -1,6 +1,8 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\AccessHelper;
+
 class QueryMatchFilter extends AbstractFilter
 {
     const MATCH_QUERY_OPERATORS = '
@@ -46,10 +48,10 @@ class QueryMatchFilter extends AbstractFilter
         $comparisonValue = preg_replace('/[\'"]$/', '', $comparisonValue);
 
         foreach ($collection as $value) {
-            if ($this->keyExists($value, $key)) {
-                $value1 = $this->getValue($value, $key);
+            if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
+                $value1 = AccessHelper::getValue($value, $key, $this->magicIsAllowed);
 
-                if ($operator === null && $this->keyExists($value, $key)) {
+                if ($operator === null && AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
                     $return[] = $value;
                 }
 

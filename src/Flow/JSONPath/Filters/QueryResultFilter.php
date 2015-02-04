@@ -1,6 +1,7 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\AccessHelper;
 use Flow\JSONPath\JSONPathException;
 
 class QueryResultFilter extends AbstractFilter
@@ -18,8 +19,8 @@ class QueryResultFilter extends AbstractFilter
 
         $matchKey = $matches['key'];
 
-        if ($this->keyExists($collection, $matchKey)) {
-            $value = $this->getValue($collection, $matchKey);
+        if (AccessHelper::keyExists($collection, $matchKey, $this->magicIsAllowed)) {
+            $value = AccessHelper::getValue($collection, $matchKey, $this->magicIsAllowed);
         } else {
             if ($matches['key'] === 'length') {
                 $value = count($collection);
@@ -46,8 +47,8 @@ class QueryResultFilter extends AbstractFilter
                 break;
         }
 
-        if ($this->keyExists($collection, $resultKey)) {
-            $result[] = $this->getValue($collection, $resultKey);
+        if (AccessHelper::keyExists($collection, $resultKey, $this->magicIsAllowed)) {
+            $result[] = AccessHelper::getValue($collection, $resultKey, $this->magicIsAllowed);
         }
 
         return $result;

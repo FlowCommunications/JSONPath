@@ -1,5 +1,5 @@
 <?php
-namespace Flow\JSONPath;
+namespace Flow\JSONPath\Test;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -15,7 +15,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testChildOperators()
     {
-        $result = (new JSONPath($this->exampleData()))->find('$.store.books[0].title');
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find('$.store.books[0].title');
         $this->assertEquals('Sayings of the Century', $result[0]);
     }
 
@@ -24,7 +24,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testChildOperatorsAlt()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][0]['title']");
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][0]['title']");
         $this->assertEquals('Sayings of the Century', $result[0]);
     }
 
@@ -34,29 +34,29 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     public function testFilterSliceA()
     {
         // Copy all items... similar to a wildcard
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][:].title");
-        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick', 'The Lord of the Rings'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][:].title");
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick', 'The Lord of the Rings'], $result->data());
     }
 
     public function testFilterSliceB()
     {
         // Fetch every second item starting with the first index (odd items)
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][1::2].title");
-        $this->assertEquals(['Sword of Honour', 'The Lord of the Rings'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][1::2].title");
+        $this->assertEquals(['Sword of Honour', 'The Lord of the Rings'], $result->data());
     }
 
     public function testFilterSliceC()
     {
         // Fetch up to the second index
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][0:2:1].title");
-        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][0:2:1].title");
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], $result->data());
     }
 
     public function testFilterSliceD()
     {
         // Fetch up to the second index
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][-1:].title");
-        $this->assertEquals(['The Lord of the Rings'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][-1:].title");
+        $this->assertEquals(['The Lord of the Rings'], $result->data());
     }
 
     /**
@@ -65,8 +65,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     public function testFilterSliceE()
     {
         // Fetch up to the second index
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][:-2].title");
-        $this->assertEquals(['Sayings of the Century', 'Sword of Honour'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][:-2].title");
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour'], $result->data());
     }
 
     /**
@@ -75,8 +75,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     public function testFilterSliceF()
     {
         // Fetch up to the second index
-        $result = (new JSONPath($this->exampleData()))->find("$['store']['books'][-1].title");
-        $this->assertEquals(['The Lord of the Rings'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][-1].title");
+        $this->assertEquals(['The Lord of the Rings'], $result->data());
     }
 
     /**
@@ -86,8 +86,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testChildQuery()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$.store.books[(@.length-1)].title");
-        $this->assertEquals(['The Lord of the Rings'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[(@.length-1)].title");
+        $this->assertEquals(['The Lord of the Rings'], $result->data());
     }
 
     /**
@@ -96,8 +96,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryMatchLessThan()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$.store.books[?(@.price < 10)].title");
-        $this->assertEquals(['Sayings of the Century', 'Moby Dick'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[?(@.price < 10)].title");
+        $this->assertEquals(['Sayings of the Century', 'Moby Dick'], $result->data());
     }
 
     /**
@@ -106,7 +106,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testQueryMatchEquals()
     {
-        $results = (new JSONPath($this->exampleData()))->find('$..books[?(@.author == "J. R. R. Tolkien")].title');
+        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author == "J. R. R. Tolkien")].title');
         $this->assertEquals($results[0], 'The Lord of the Rings');
     }
 
@@ -115,8 +115,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testWildcardAltNotation()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$.store.books[*].author");
-        $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[*].author");
+        $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result->data());
     }
 
     /**
@@ -124,8 +124,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveChildSearch()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..author");
-        $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..author");
+        $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result->data());
     }
 
     /**
@@ -135,7 +135,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testWildCard()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$.store.*");
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.*");
         if (is_object($result[0][0])) {
             $this->assertEquals('Sayings of the Century', $result[0][0]->title);
         } else {
@@ -155,8 +155,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveChildSearchAlt()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$.store..price");
-        $this->assertEquals([8.95, 12.99, 8.99, 22.99, 19.95], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store..price");
+        $this->assertEquals([8.95, 12.99, 8.99, 22.99, 19.95], $result->data());
     }
 
     /**
@@ -165,8 +165,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveChildSearchWithChildIndex()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..books[2].title");
-        $this->assertEquals(["Moby Dick"], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[2].title");
+        $this->assertEquals(["Moby Dick"], $result->data());
     }
 
     /**
@@ -174,8 +174,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveChildSearchWithChildQuery()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..books[(@.length-1)].title");
-        $this->assertEquals(["The Lord of the Rings"], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[(@.length-1)].title");
+        $this->assertEquals(["The Lord of the Rings"], $result->data());
     }
 
     /**
@@ -184,8 +184,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveChildSearchWithSliceFilter()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..books[-1:].title");
-        $this->assertEquals(["The Lord of the Rings"], $result);
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[-1:].title");
+        $this->assertEquals(["The Lord of the Rings"], $result->data());
     }
 
     /**
@@ -194,9 +194,9 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveWithQueryMatch()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..books[?(@.isbn)].isbn");
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[?(@.isbn)].isbn");
 
-        $this->assertEquals(['0-553-21311-3', '0-395-19395-8'], $result);
+        $this->assertEquals(['0-553-21311-3', '0-395-19395-8'], $result->data());
     }
 
     /**
@@ -205,7 +205,7 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
      */
     public function testRecursiveWithWildcard()
     {
-        $result = (new JSONPath($this->exampleData()))->find("$..*");
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..*");
         $result = json_decode(json_encode($result), true);
 
         $this->assertEquals('Sayings of the Century', $result[0]['books'][0]['title']);
@@ -217,102 +217,9 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $data = ['foo' => 'asdf'];
 
         $result = (new JSONPath($data))->find("$.foo.bar");
-        $this->assertEquals([], $result);
+        $this->assertEquals([], $result->data());
     }
 
-    public function testBenchmark()
-    {
-        $goessnerJsonPath = new PeekmoJsonPath;
-        $exampleData = $this->exampleData();
-
-        $start1 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$.store.books[?(@.price < 10)]');
-        }
-        $end1 = microtime(true);
-
-        $start2 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results2 = (new JSONPath($exampleData))->find('$.store.books[?(@.price < 10)]');
-        }
-        $end2 = microtime(true);
-
-        $this->assertEquals($results1, $results2);
-
-        echo "Old JsonPath: " . ($end1 - $start1) . PHP_EOL;
-        echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;
-    }
-
-    public function testBenchmark2()
-    {
-        $goessnerJsonPath = new PeekmoJsonPath;
-        $exampleData = $this->exampleData();
-
-        $start1 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$.store.*');
-        }
-        $end1 = microtime(true);
-
-        $start2 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results2 = (new JSONPath($exampleData))->find('$.store.*');
-        }
-        $end2 = microtime(true);
-
-        $this->assertEquals($results1, $results2);
-
-        echo "Old JsonPath: " . ($end1 - $start1) . PHP_EOL;
-        echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;
-    }
-
-    public function testBenchmark3()
-    {
-        $goessnerJsonPath = new PeekmoJsonPath;
-        $exampleData = $this->exampleData();
-
-        $start1 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$..*');
-        }
-        $end1 = microtime(true);
-
-        $start2 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results2 = (new JSONPath($exampleData))->find('$..*');
-        }
-        $end2 = microtime(true);
-
-        $this->assertEquals($results1, $results2);
-
-        echo "Old JsonPath: " . ($end1 - $start1) . PHP_EOL;
-        echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;
-    }
-
-    public function testBenchmark4()
-    {
-        $goessnerJsonPath = new PeekmoJsonPath;
-        $exampleData = $this->exampleData();
-
-        $start1 = microtime(true);
-        for ($i = 0; $i < 100; $i += 1) {
-            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$..price');
-        }
-        $end1 = microtime(true);
-
-        $exampleData = $this->exampleData(true);
-
-        $start2 = microtime(true);
-        for ($i = 0; $i < 100; $i += 1) {
-            $results2 = (new JSONPath($exampleData))->find('$..price');
-        }
-        $end2 = microtime(true);
-
-        $this->assertEquals($results1, $results2);
-
-        echo "Old JsonPath: " . ($end1 - $start1) . PHP_EOL;
-        echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;
-    }
 
     public function testMagicMethods()
     {
@@ -320,19 +227,19 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
 
         $results = (new JSONPath($fooClass, JSONPath::ALLOW_MAGIC))->find('$.foo');
 
-        $this->assertEquals(['bar'], $results);
+        $this->assertEquals(['bar'], $results->data());
     }
+
 
     public function testRecursiveQueryMatchWithSquareBrackets()
     {
         $result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'][?(@['@language']='en')]['@language']");
-        $this->assertEquals(["en"], $result);
+        $this->assertEquals(["en"], $result->data());
     }
-
 
     public function exampleData($asArray = true)
     {
-        $json = <<<JSON
+        $json = '
         {
           "store":{
             "books":[
@@ -368,28 +275,30 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
               "price":19.95
             }
           }
-        }
-JSON;
+        }';
         return json_decode($json, $asArray);
     }
 
     public function exampleDataExtra($asArray = true)
     {
-        $json = <<<JSON
-{
-   "http://www.w3.org/2000/01/rdf-schema#label":[
-      {
-         "@language":"en"
-      },
-      {
-         "@language":"de"
-      }
-   ]
-}
-JSON;
-        return json_decode($json, $asArray);
+        $json = '
+            {
+               "http://www.w3.org/2000/01/rdf-schema#label":[
+                  {
+                     "@language":"en"
+                  },
+                  {
+                     "@language":"de"
+                  }
+               ]
+            }
+        ';
 
+        return json_decode($json, $asArray);
     }
+
+
+
 }
 
 class JSONPathTestClass

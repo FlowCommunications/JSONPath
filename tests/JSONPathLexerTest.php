@@ -1,5 +1,7 @@
 <?php
-namespace Flow\JSONPath;
+namespace Flow\JSONPath\Test;
+
+use Flow\JSONPath\JSONPathLexer;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 

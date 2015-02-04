@@ -1,10 +1,12 @@
 <?php
 namespace Flow\JSONPath;
 
-
+use ArrayAccess;
+use Iterator;
+use JsonSerializable;
 use Flow\JsonPath\Filters\AbstractFilter;
 
-class JSONPath
+class JSONPath implements ArrayAccess, Iterator, JsonSerializable
 {
     protected static $tokenCache = [];
 
@@ -38,7 +40,7 @@ class JSONPath
             $filteredData = [];
 
             foreach ($collectionData as $value) {
-                if ($this->isFilterable($value)) {
+                if (AccessHelper::isCollectionType($value)) {
                     $filteredData = array_merge($filteredData, $filter->filter($value));
                 }
             }
@@ -46,35 +48,27 @@ class JSONPath
             $collectionData = $filteredData;
         }
 
-        return $collectionData;
-    }
 
-    public function isFilterable($value)
-    {
-        return is_array($value) || is_object($value);
+        return new static($collectionData, $this->options);
     }
 
     /**
-     * Evaluate an expression and return the first result
-     * @param $expression
-     * @return array|null
+     * @return mixed
      */
-    public function first($expression)
+    public function first()
     {
-        $result = $this->find($expression);
-        return isset($result[0]) ? $result[0] : null;
+        $keys = AccessHelper::collectionKeys($this->data);
+        return $this->data[$keys[0]] ? $this->data[$keys[0]] : null;
     }
 
     /**
      * Evaluate an expression and return the last result
-     * @param $expression
      * @return mixed
      */
-    public function last($expression)
+    public function last()
     {
-        $result = $this->find($expression);
-        $length = count($result);
-        return array_key_exists($length - 1, $result) ? $result[$length - 1] : null;
+        $keys = AccessHelper::collectionKeys($this->data);
+        return $this->data[end($keys)] ? $this->data[end($keys)] : null;
     }
 
     /**
@@ -118,4 +112,87 @@ class JSONPath
         return $tokens;
     }
 
+    public function data()
+    {
+        return $this->data;
+    }
+
+    public function offsetExists($offset)
+    {
+        return AccessHelper::keyExists($this->data, $offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        $value = AccessHelper::getValue($this->data, $offset);
+
+        return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if ($offset === null) {
+            $this->data[] = $value;
+        } else {
+            AccessHelper::setValue($this->data, $offset, $value);
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        AccessHelper::unsetValue($this->data, $offset);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->data;
+    }
+
+    public function __get($key)
+    {
+        return $this->offsetExists($key) ? $this->offsetGet($key) : null;
+    }
+
+    /**
+     * Return the current element
+     */
+    public function current()
+    {
+        $value = current($this->data);
+
+        return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Move forward to next element
+     */
+    public function next()
+    {
+        next($this->data);
+    }
+
+    /**
+     * Return the key of the current element
+     */
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    /**
+     * Checks if current position is valid
+     */
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     */
+    public function rewind()
+    {
+        reset($this->data);
+    }
 }

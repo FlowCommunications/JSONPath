@@ -1,6 +1,8 @@
 <?php
 namespace Flow\JSONPath\Filters;
 
+use Flow\JSONPath\AccessHelper;
+
 class IndexFilter extends AbstractFilter
 {
     /**
@@ -11,10 +13,10 @@ class IndexFilter extends AbstractFilter
     {
         $return = [];
 
-        if ($this->keyExists($collection, $this->value)) {
-            $return[] = $this->getValue($collection, $this->value);
+        if (AccessHelper::keyExists($collection, $this->value, $this->magicIsAllowed)) {
+            $return[] = AccessHelper::getValue($collection, $this->value, $this->magicIsAllowed);
         } else if ($this->value === "*") {
-            return $this->arrayValues($collection);
+            return AccessHelper::arrayValues($collection);
         }
 
         return $return;
