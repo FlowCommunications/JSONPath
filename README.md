@@ -17,41 +17,41 @@ I believe that is improves on the original script (which was last updated in 200
 JSONPath Examples
 ---
 
-JSONPath                 | Result
--------------------------|-------------------------------------
-$.store.books[\*].author | the authors of all books in the store
-$..author                | all authors
-$.store..price           | the price of everything in the store.
-$..books[2]              | the third book
-$..books[(@.length-1)]   | the last book in order.
-$..books[0,1]            | the first two books
-$..books[:2]             | the first two books
-$..books[?(@.isbn)]      | filter all books with isbn number
-$..books[?(@.price<10)]  | filter all books cheapier than 10
-$..*                     | all elements in the data (recursively extracted)
+JSONPath                  | Result
+--------------------------|-------------------------------------
+`$.store.books[\*].author` | the authors of all books in the store
+`$..author`                | all authors
+`$.store..price`           | the price of everything in the store.
+`$..books[2]`              | the third book
+`$..books[(@.length-1)]`   | the last book in order.
+`$..books[0,1]`            | the first two books
+`$..books[:2]`             | the first two books
+`$..books[?(@.isbn)]`      | filter all books with isbn number
+`$..books[?(@.price<10)]`  | filter all books cheapier than 10
+`$..*`                     | all elements in the data (recursively extracted)
 
 
 Expression syntax
 ---
 
-Symbol              | Description
---------------------|-------------------------
-$                   | The root object/element (not strictly necessary)
-@                   | The current object/element
-. or []             | Child operator
-..                  | Recursive descent
-*                   | Wildcard. All child elements regardless their index.
-[,]                 | Array indices as a set
-[start:end:step]    | Array slice operator borrowed from ES4/Python.
-?()                 | Filters a result set by a script expression
-()                  | Uses the result of a script expression as the index
+Symbol                | Description
+----------------------|-------------------------
+`$`                   | The root object/element (not strictly necessary)
+`@`                   | The current object/element
+`.` or `[]`           | Child operator
+`..`                  | Recursive descent
+`*`                   | Wildcard. All child elements regardless their index.
+`[,]`                 | Array indices as a set
+`[start:end:step]`    | Array slice operator borrowed from ES4/Python.
+`?()`                 | Filters a result set by a script expression
+`()`                  | Uses the result of a script expression as the index
 
 PHP Usage
 ---
 
 ```php
 $data = ['people' => [['name' => 'Joe'], ['name' => 'Jane'], ['name' => 'John']]];
-$result = (new JSONPath($data))->find('$.people.*.name');
+$result = (new JSONPath($data))->find('$.people.*.name'); // returns new JSONPath
 // $result[0] === 'Joe'
 // $result[1] === 'Jane'
 // $result[2] === 'John'
@@ -102,5 +102,6 @@ Changelog
 ---------
 ### 0.2.0
  - Added a heap of array access features for more creative iterating and chaining possibilities
+ 
 ### 0.1.x
  - Init
