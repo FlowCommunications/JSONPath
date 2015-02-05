@@ -11,10 +11,15 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     protected static $tokenCache = [];
 
     protected $data;
+
     protected $options;
 
     const ALLOW_MAGIC = 1;
 
+    /**
+     * @param $data
+     * @param int $options
+     */
     public function __construct($data, $options = 0)
     {
         $this->data = $data;
@@ -23,8 +28,10 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
 
     /**
      * Evaluate an expression
+     *
      * @param $expression
-     * @return array
+     * @return static
+     * @throws JSONPathException
      */
     public function find($expression)
     {
@@ -112,6 +119,9 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         return $tokens;
     }
 
+    /**
+     * @return mixed
+     */
     public function data()
     {
         return $this->data;
@@ -148,11 +158,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         return $this->data;
     }
 
-    public function __get($key)
-    {
-        return $this->offsetExists($key) ? $this->offsetGet($key) : null;
-    }
-
     /**
      * Return the current element
      */
@@ -164,7 +169,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
      * Move forward to next element
      */
     public function next()
@@ -195,4 +199,14 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     {
         reset($this->data);
     }
+
+    /**
+     * @param $key
+     * @return JSONPath|mixed|null|static
+     */
+    public function __get($key)
+    {
+        return $this->offsetExists($key) ? $this->offsetGet($key) : null;
+    }
+
 }

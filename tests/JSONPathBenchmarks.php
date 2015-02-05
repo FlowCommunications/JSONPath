@@ -14,18 +14,18 @@ class JSONPathBenchmarks extends \PHPUnit_Framework_TestCase
         $exampleData = $this->exampleData();
 
         $start1 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
-            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$.store.books[?(@.price < 10)]');
+        for ($i = 0; $i < 100; $i += 1) {
+            $results1 = $goessnerJsonPath->jsonPath($exampleData, '$.store.books[?(@."price" < 10)]');
         }
         $end1 = microtime(true);
 
         $start2 = microtime(true);
-        for ($i = 0; $i < 1; $i += 1) {
+        for ($i = 0; $i < 100; $i += 1) {
             $results2 = (new JSONPath($exampleData))->find('$.store.books[?(@.price < 10)]');
         }
         $end2 = microtime(true);
 
-        $this->assertEquals($results1->data(), $results2->data());
+        $this->assertEquals($results1, $results2->data());
 
         echo "Old JsonPath: " . ($end1 - $start1) . PHP_EOL;
         echo "JSONPath: " . ($end2 - $start2) . PHP_EOL;

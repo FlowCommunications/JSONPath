@@ -10,7 +10,7 @@
     ],
     "autoload": {
       "psr-0": {
-        "Flow\\JSONPath": "src/"
+        "Flow\\JSONPath": "src/",
         "Flow\\JSONPath\\Test": "tests/"
       }
     },
