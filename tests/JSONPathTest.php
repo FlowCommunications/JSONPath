@@ -237,6 +237,19 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(["en"], $result->data());
     }
 
+    public function testFirst()
+    {
+        $result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'].*");
+
+        $this->assertEquals(["@language" => "en"], $result->first()->data());
+    }
+
+    public function testLast()
+    {
+        $result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'].*");
+        $this->assertEquals(["@language" => "de"], $result->last()->data());
+    }
+
     public function exampleData($asArray = true)
     {
         $json = '

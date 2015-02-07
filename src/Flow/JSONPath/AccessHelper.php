@@ -3,7 +3,7 @@ namespace Flow\JSONPath;
 
 class AccessHelper
 {
-    public function collectionKey($collection)
+    public static function collectionKeys($collection)
     {
         if (is_object($collection)) {
             return array_keys(get_object_vars($collection));
