@@ -98,6 +98,8 @@ The [Hash](http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html) util
 
 The original JsonPath implementations is available at [http://code.google.com/p/jsonpath]() and re-hosted for composer here [Peekmo/JsonPath](https://github.com/Peekmo/JsonPath).
 
+[ObjectPath](http://objectpath.org) ([https://github.com/adriank/ObjectPath]()) appears to be a Python/JS implementation with a new name and extra features.
+
 Changelog
 ---------
 ### 0.2.0
