@@ -65,7 +65,13 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     public function first()
     {
         $keys = AccessHelper::collectionKeys($this->data);
-        $value = $this->data[$keys[0]] ? $this->data[$keys[0]] : null;
+
+        if (empty($keys)) {
+            return null;
+        }
+
+        $value = isset($this->data[$keys[0]]) ? $this->data[$keys[0]] : null;
+
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
     }
 
@@ -76,7 +82,13 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     public function last()
     {
         $keys = AccessHelper::collectionKeys($this->data);
+
+        if (empty($keys)) {
+            return null;
+        }
+
         $value = $this->data[end($keys)] ? $this->data[end($keys)] : null;
+        
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
     }
 
