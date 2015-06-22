@@ -33,9 +33,38 @@ class JSONPathLexer
     const MATCH_QUERY_MATCH  = '\s* \?\(.+?\) \s*';
     const MATCH_INDEX_ALT    = '\s* ["\']? (.+?) ["\']? \s*';
 
+    /**
+     * The expression being lexed.
+     *
+     * @var string
+     */
+    protected $expression = '';
+
+    /**
+     * The length of the expression.
+     *
+     * @var int
+     */
+    protected $expressionLength = 0;
+
     public function __construct($expression)
     {
+        $expression = trim($expression);
+
+        if (!strlen($expression)) {
+            return;
+        }
+
+        if ($expression[0] === '$') {
+            $expression = substr($expression, 1);
+        }
+
+        if ($expression[0] !== '.' && $expression[0] !== '[') {
+            $expression = '.' . $expression;
+        }
+
         $this->expression = $expression;
+        $this->expressionLength = strlen($expression);
     }
 
     public function parseExpressionGroups()
@@ -44,16 +73,12 @@ class JSONPathLexer
         $capturing = false;
         $group = '';
         $groups = [];
-        $token = array(
-            'value' => '',
-            'type' => '',
-        );
 
-        for ($i = 0; $i < strlen($this->expression); $i += 1) {
+        for ($i = 0; $i < $this->expressionLength; $i++) {
             $char = $this->expression[$i];
 
             if ($char === '.' && $squareBracketDepth === 0) {
-                if (! empty($group) && $group !== '.') {
+                if ($group !== '' && $group !== '.') {
                     $groups[] = $group;
                     $group = '';
                 }
@@ -62,7 +87,7 @@ class JSONPathLexer
 
             if ($char == "[") {
                 if ($squareBracketDepth === 0) {
-                    if (! empty($group)) {
+                    if ($group !== '') {
                         $groups[] = $group;
                         $group = '';
                     }
@@ -89,7 +114,7 @@ class JSONPathLexer
 
         }
 
-        if (! empty($group)) {
+        if ($group !== '') {
             $groups[] = $group;
         }
 
