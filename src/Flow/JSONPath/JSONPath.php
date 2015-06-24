@@ -88,7 +88,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         }
 
         $value = $this->data[end($keys)] ? $this->data[end($keys)] : null;
-        
+
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
     }
 
@@ -120,9 +120,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         if (isset(static::$tokenCache[$cacheKey])) {
             return static::$tokenCache[$cacheKey];
         }
-
-        $expression = trim($expression);
-        $expression = preg_replace('/^\$/', '', $expression);
 
         $lexer = new JSONPathLexer($expression);
 

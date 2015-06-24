@@ -212,6 +212,16 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(19.95, $result[26]);
     }
 
+    /**
+     * Tests direct key access.
+     */
+    public function testSimpleArrayAccess()
+    {
+        $result = (new JSONPath(array('title' => 'test title')))->find('title');
+
+        $this->assertEquals(array('test title'), $result->data());
+    }
+
     public function testFilteringOnNoneArrays()
     {
         $data = ['foo' => 'asdf'];
