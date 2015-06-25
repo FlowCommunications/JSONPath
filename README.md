@@ -94,16 +94,30 @@ So here are the types of query expressions that are supported:
 Similar projects
 ----------------
 
+[JMESPath](https://github.com/jmespath) does similiar things, is full of features and has a PHP implementation
+
 The [Hash](http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html) utility from CakePHP does some similar things 
 
-The original JsonPath implementations is available at [http://code.google.com/p/jsonpath]() and re-hosted for composer here [Peekmo/JsonPath](https://github.com/Peekmo/JsonPath).
+The original JsonPath implementations is available at [http://code.google.com/p/jsonpath]() and re-hosted for composer
+here [Peekmo/JsonPath](https://github.com/Peekmo/JsonPath).
 
-[ObjectPath](http://objectpath.org) ([https://github.com/adriank/ObjectPath]()) appears to be a Python/JS implementation with a new name and extra features.
+[ObjectPath](http://objectpath.org) ([https://github.com/adriank/ObjectPath]()) appears to be a Python/JS implementation
+with a new name and extra features.
 
 Changelog
 ---------
+
+### 0.2.6
+ - Added JSONPathToken class as value object
+ - Lexer clean up and refactor
+ - Updated the lexing and filtering of the recursive token ("..") to allow for a combination of recursion
+   and filters, eg. $..[?(@.type == 'suburb')].name
+
+### 0.2.1 - 0.2.5
+ - Various bug fixes and clean up
+
 ### 0.2.0
  - Added a heap of array access features for more creative iterating and chaining possibilities
- 
+
 ### 0.1.x
  - Init

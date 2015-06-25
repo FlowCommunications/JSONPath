@@ -241,10 +241,17 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testRecursiveQueryMatchWithSquareBrackets()
+    public function testMatchWithComplexSquareBrackets()
     {
         $result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'][?(@['@language']='en')]['@language']");
         $this->assertEquals(["en"], $result->data());
+    }
+
+    public function testQueryMatchWithRecursive()
+    {
+        $locations = $this->exampleDataLocations();
+        $result = (new JSONPath($locations))->find("..[?(@.type == 'suburb')].name");
+        $this->assertEquals(["Rosebank"], $result->data());
     }
 
     public function testFirst()
@@ -314,6 +321,27 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
                      "@language":"de"
                   }
                ]
+            }
+        ';
+
+        return json_decode($json, $asArray);
+    }
+
+
+    public function exampleDataLocations($asArray = true)
+    {
+        $json = '
+            {
+               "name": "Gauteng",
+               "type": "province",
+               "child": {
+                    "name": "Johannesburg",
+                    "type": "city",
+                    "child": {
+                        "name": "Rosebank",
+                        "type": "suburb"
+                    }
+               }
             }
         ';
 

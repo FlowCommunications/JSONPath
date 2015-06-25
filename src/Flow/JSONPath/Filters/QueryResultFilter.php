@@ -15,7 +15,7 @@ class QueryResultFilter extends AbstractFilter
     {
         $result = [];
 
-        preg_match('/@\.(?<key>\w+)\s*(?<operator>-|\+|\*|\/)\s*(?<numeric>\d+)/', $this->value, $matches);
+        preg_match('/@\.(?<key>\w+)\s*(?<operator>-|\+|\*|\/)\s*(?<numeric>\d+)/', $this->token->value, $matches);
 
         $matchKey = $matches['key'];
 

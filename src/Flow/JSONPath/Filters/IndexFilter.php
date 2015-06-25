@@ -11,15 +11,15 @@ class IndexFilter extends AbstractFilter
      */
     public function filter($collection)
     {
-        $return = [];
-
-        if (AccessHelper::keyExists($collection, $this->value, $this->magicIsAllowed)) {
-            $return[] = AccessHelper::getValue($collection, $this->value, $this->magicIsAllowed);
-        } else if ($this->value === "*") {
+        if (AccessHelper::keyExists($collection, $this->token->value, $this->magicIsAllowed)) {
+            return [
+                AccessHelper::getValue($collection, $this->token->value, $this->magicIsAllowed)
+            ];
+        } else if ($this->token->value === "*") {
             return AccessHelper::arrayValues($collection);
         }
 
-        return $return;
+        return [];
     }
 
 }

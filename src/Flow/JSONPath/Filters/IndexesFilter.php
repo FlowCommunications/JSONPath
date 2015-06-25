@@ -12,7 +12,7 @@ class IndexesFilter extends AbstractFilter
     public function filter($collection)
     {
         $return = [];
-        foreach ($this->value as $index) {
+        foreach ($this->token->value as $index) {
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
                 $return[] = AccessHelper::getValue($collection, $index, $this->magicIsAllowed);
             }

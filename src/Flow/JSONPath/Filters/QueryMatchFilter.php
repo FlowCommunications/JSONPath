@@ -19,7 +19,7 @@ class QueryMatchFilter extends AbstractFilter
     {
         $return = [];
 
-        preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->value, $matches);
+        preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->token->value, $matches);
 
         if (!isset($matches[1])) {
             throw new \Exception("Malformed filter query");

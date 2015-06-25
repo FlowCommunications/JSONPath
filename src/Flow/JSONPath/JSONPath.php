@@ -39,16 +39,15 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
 
         $collectionData = [$this->data];
 
-        while (count($tokens)) {
-            $token = array_shift($tokens);
-
-            $filter = $this->buildFilter($token);
+        foreach ($tokens as $token) {
+            $filter = $token->buildFilter($this->options);
 
             $filteredData = [];
 
             foreach ($collectionData as $value) {
                 if (AccessHelper::isCollectionType($value)) {
-                    $filteredData = array_merge($filteredData, $filter->filter($value));
+                    $filteredValue = $filter->filter($value);
+                    $filteredData = array_merge($filteredData, $filteredValue);
                 }
             }
 
@@ -90,22 +89,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         $value = $this->data[end($keys)] ? $this->data[end($keys)] : null;
 
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
-    }
-
-    /**
-     * @param $token
-     * @return AbstractFilter
-     * @throws \Exception
-     */
-    public function buildFilter($token)
-    {
-        $filterClass = 'Flow\\JSONPath\\Filters\\' . ucfirst($token['type']) . 'Filter';
-
-        if (! class_exists($filterClass)) {
-            throw new JSONPathException("No filter class exists for token [{$token['type']}]");
-        }
-
-        return new $filterClass($token['value'], $this->options);
     }
 
     /**
