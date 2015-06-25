@@ -107,7 +107,7 @@ with a new name and extra features.
 Changelog
 ---------
 
-### 0.2.6
+### 0.3.0
  - Added JSONPathToken class as value object
  - Lexer clean up and refactor
  - Updated the lexing and filtering of the recursive token ("..") to allow for a combination of recursion
