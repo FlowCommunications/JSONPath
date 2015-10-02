@@ -267,6 +267,18 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(["@language" => "de"], $result->last()->data());
     }
 
+    public function testSlashesInIndex()
+    {
+        $result = (new JSONPath($this->exampleDataWithSlashes()))->find("$['mediatypes']['image/png']");
+
+        $this->assertEquals(
+            [
+                "/core/img/filetypes/image.png",
+            ],
+            $result->data()
+        );
+    }
+
     public function exampleData($asArray = true)
     {
         $json = '
@@ -342,6 +354,24 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
                         "type": "suburb"
                     }
                }
+            }
+        ';
+
+        return json_decode($json, $asArray);
+    }
+
+
+    public function exampleDataWithSlashes($asArray = true)
+    {
+        $json = '
+            {
+                "features": [],
+                "mediatypes": {
+                    "image/png": "/core/img/filetypes/image.png",
+                    "image/jpeg": "/core/img/filetypes/image.png",
+                    "image/gif": "/core/img/filetypes/image.png",
+                    "application/postscript": "/core/img/filetypes/image-vector.png"
+                }
             }
         ';
 
