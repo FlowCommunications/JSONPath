@@ -9,17 +9,19 @@ class IndexFilter extends AbstractFilter
      * @param array $collection
      * @return array
      */
-    public function filter($collection)
+    public function &filter(& $collection)
     {
+        $arr = [];
+
         if (AccessHelper::keyExists($collection, $this->token->value, $this->magicIsAllowed)) {
-            return [
-                AccessHelper::getValue($collection, $this->token->value, $this->magicIsAllowed)
-            ];
-        } else if ($this->token->value === "*") {
-            return AccessHelper::arrayValues($collection);
+            $arr[] =& AccessHelper::getValue($collection, $this->token->value, $this->magicIsAllowed);
+        } else {
+            if ($this->token->value === "*") {
+                $arr =& AccessHelper::arrayValues($collection);
+            }
         }
 
-        return [];
+        return $arr;
     }
 
 }

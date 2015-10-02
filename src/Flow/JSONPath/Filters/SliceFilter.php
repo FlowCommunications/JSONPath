@@ -10,7 +10,7 @@ class SliceFilter extends AbstractFilter
      * @param $collection
      * @return array
      */
-    public function filter($collection)
+    public function &filter(&$collection)
     {
         /*
 
@@ -66,7 +66,7 @@ class SliceFilter extends AbstractFilter
             }
 
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
-                $result[] = $collection[$index];
+                $result[] =& $collection[$index];
             }
         }
 

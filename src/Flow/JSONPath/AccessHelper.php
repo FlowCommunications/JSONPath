@@ -30,17 +30,23 @@ class AccessHelper
         }
     }
 
-    public static function getValue($collection, $key, $magicIsAllowed = false)
+    public static function &getValue(&$collection, $key, $magicIsAllowed = false)
     {
         if ($magicIsAllowed && is_object($collection) && method_exists($collection, '__get')) {
             return $collection->__get($key);
         }
 
         if (is_object($collection) && ! $collection instanceof \ArrayAccess) {
-            return $collection->$key;
+            $var =& $collection->$key;
         } else {
-            return $collection[$key];
+            $var =& $collection[$key];
         }
+
+        return $var;
+
+        $arr = [];
+        $arr[0] =& $var;
+        return $arr;
     }
 
     public static function setValue(&$collection, $key, $value)
@@ -61,12 +67,20 @@ class AccessHelper
         }
     }
 
-    public static function arrayValues($collection)
+    public static function &arrayValues(&$collection)
     {
+        $arr = [];
+
         if (is_array($collection)) {
-            return array_values($collection);
+            foreach ($collection as &$v) {
+                $arr[] =& $v;
+            }
+            return $arr;
         } else if (is_object($collection)) {
-            return array_values((array) $collection);
+            foreach (get_object_vars($collection) as $key => $value) {
+                $arr[] =& $collection->$key;
+            }
+            return $arr;
         }
 
         throw new JSONPathException("Invalid variable type for arrayValues");

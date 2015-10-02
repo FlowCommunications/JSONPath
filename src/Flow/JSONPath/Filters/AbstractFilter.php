@@ -34,6 +34,6 @@ abstract class AbstractFilter
      * @param $collection
      * @return array
      */
-    abstract public function filter($collection);
+    abstract public function &filter(& $collection);
 }
  

@@ -10,7 +10,7 @@ class RecursiveFilter extends AbstractFilter
      * @param $collection
      * @return array
      */
-    public function filter($collection)
+    public function &filter(&$collection)
     {
         $result = [];
 
@@ -19,13 +19,13 @@ class RecursiveFilter extends AbstractFilter
         return $result;
     }
 
-    private function recurse(& $result, $data)
+    private function recurse(&$result, &$data)
     {
-        $result[] = $data;
+        $result[] =& $data;
 
         if (AccessHelper::isCollectionType($data)) {
-            foreach (AccessHelper::arrayValues($data) as $key => $value) {
-                $results[] = $value;
+            foreach (AccessHelper::arrayValues($data) as $key => &$value) {
+                $results[] = &$value;
 
                 if (AccessHelper::isCollectionType($value)) {
                     $this->recurse($result, $value);

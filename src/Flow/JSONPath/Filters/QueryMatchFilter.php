@@ -15,7 +15,7 @@ class QueryMatchFilter extends AbstractFilter
      * @throws \Exception
      * @return array
      */
-    public function filter($collection)
+    public function &filter(&$collection)
     {
         $return = [];
 
@@ -25,7 +25,7 @@ class QueryMatchFilter extends AbstractFilter
             throw new \Exception("Malformed filter query");
         }
 
-        $key      = $matches['key'] ?: $matches['keySquare'];
+        $key = $matches['key'] ?: $matches['keySquare'];
 
         if ($key === "") {
             throw new \Exception("Malformed filter query: key was not set");
@@ -47,25 +47,25 @@ class QueryMatchFilter extends AbstractFilter
         $comparisonValue = preg_replace('/^[\'"]/', '', $comparisonValue);
         $comparisonValue = preg_replace('/[\'"]$/', '', $comparisonValue);
 
-        foreach ($collection as $value) {
+        foreach ($collection as &$value) {
             if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
-                $value1 = AccessHelper::getValue($value, $key, $this->magicIsAllowed);
+                $value1 =& AccessHelper::getValue($value, $key, $this->magicIsAllowed);
 
                 if ($operator === null && AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
-                    $return[] = $value;
+                    $return[] =& $value;
                 }
 
                 if (($operator === "=" || $operator === "==") && $value1 == $comparisonValue) {
-                    $return[] = $value;
+                    $return[] =& $value;
                 }
                 if (($operator === "!=" || $operator === "!==") && $value1 != $comparisonValue) {
-                    $return[] = $value;
+                    $return[] =& $value;
                 }
                 if ($operator == ">" && $value1 > $comparisonValue) {
-                    $return[] = $value;
+                    $return[] =& $value;
                 }
                 if ($operator == "<" && $value1 < $comparisonValue) {
-                    $return[] = $value;
+                    $return[] =& $value;
                 }
             }
         }

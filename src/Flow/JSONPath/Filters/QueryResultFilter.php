@@ -11,7 +11,7 @@ class QueryResultFilter extends AbstractFilter
      * @param array $collection
      * @return array
      */
-    public function filter($collection)
+    public function &filter(&$collection)
     {
         $result = [];
 
@@ -48,7 +48,7 @@ class QueryResultFilter extends AbstractFilter
         }
 
         if (AccessHelper::keyExists($collection, $resultKey, $this->magicIsAllowed)) {
-            $result[] = AccessHelper::getValue($collection, $resultKey, $this->magicIsAllowed);
+            $result[] =& AccessHelper::getValue($collection, $resultKey, $this->magicIsAllowed);
         }
 
         return $result;

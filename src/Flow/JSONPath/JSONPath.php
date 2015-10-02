@@ -4,6 +4,7 @@ namespace Flow\JSONPath;
 use ArrayAccess;
 use Iterator;
 use JsonSerializable;
+use Closure;
 use Flow\JsonPath\Filters\AbstractFilter;
 
 class JSONPath implements ArrayAccess, Iterator, JsonSerializable
@@ -20,18 +21,16 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
      * @param $data
      * @param int $options
      */
-    public function __construct($data, $options = 0)
+    public function __construct(& $data, $options = 0)
     {
-        $this->data = $data;
+        $this->data =& $data;
         $this->options = $options;
     }
 
     /**
-     * Evaluate an expression
-     *
      * @param $expression
+     * @param Closure|null $callback
      * @return static
-     * @throws JSONPathException
      */
     public function find($expression)
     {
@@ -47,13 +46,55 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
             foreach ($collectionData as $value) {
                 if (AccessHelper::isCollectionType($value)) {
                     $filteredValue = $filter->filter($value);
-                    $filteredData = array_merge($filteredData, $filteredValue);
+
+                    foreach ($filteredValue as $v) {
+                        $filteredData[] = $v;
+                    }
                 }
             }
 
             $collectionData = $filteredData;
         }
 
+        return new static($collectionData, $this->options);
+    }
+
+    /**
+     * @param $expression
+     * @param Closure|null $callback
+     * @return static
+     */
+    public function modify($expression, Closure $callback = null)
+    {
+        $tokens = $this->parseTokens($expression);
+
+        $collectionData = [];
+
+        $collectionData[0] =& $this->data;
+
+        foreach ($tokens as $token) {
+            $filter = $token->buildFilter($this->options);
+
+            $filteredData = [];
+
+            foreach ($collectionData as & $value) {
+                if (AccessHelper::isCollectionType($value)) {
+                    $filteredValue = $filter->filter($value);
+
+                    foreach ($filteredValue as & $v) {
+                        $filteredData[] =& $v;
+                    }
+                }
+            }
+
+            $collectionData = $filteredData;
+        }
+
+        if ($callback) {
+            foreach ($collectionData as $i => &$item) {
+                $callback($item, $i);
+            }
+        }
 
         return new static($collectionData, $this->options);
     }
