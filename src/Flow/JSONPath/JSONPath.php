@@ -160,7 +160,9 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     {
         $value = AccessHelper::getValue($this->data, $offset);
 
-        return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
+        return AccessHelper::isCollectionType($value)
+            ? new static($value, $this->options)
+            : $value;
     }
 
     public function offsetSet($offset, $value)

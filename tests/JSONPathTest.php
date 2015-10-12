@@ -279,6 +279,29 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testOffsetUnset()
+    {
+        $data = array(
+            "route" => array(
+                array("name" => "A", "type" => "type of A"),
+                array("name" => "B", "type" => "type of B")
+            )
+        );
+        $data = json_encode($data);
+
+        $jsonIterator = new JSONPath(json_decode($data));
+
+        /** @var JSONPath $route */
+        $route = $jsonIterator->offsetGet('route');
+
+        $route->offsetUnset(0);
+
+        $first = $route->first();
+
+        $this->assertEquals("B", $first['name']);
+    }
+
+
     public function testFirstKey()
     {
         // Array test for array
@@ -312,6 +335,8 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('c', $lastKey);
     }
+
+
     public function exampleData($asArray = true)
     {
         $json = '
