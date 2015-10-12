@@ -279,6 +279,39 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testFirstKey()
+    {
+        // Array test for array
+        $jsonPath = new JSONPath(['a' => 'A', 'b', 'B']);
+
+        $firstKey = $jsonPath->firstKey();
+
+        $this->assertEquals('a', $firstKey);
+
+        // Array test for object
+        $jsonPath = new JSONPath((object) ['a' => 'A', 'b', 'B']);
+
+        $firstKey = $jsonPath->firstKey();
+
+        $this->assertEquals('a', $firstKey);
+    }
+
+    public function testLastKey()
+    {
+        // Array test for array
+        $jsonPath = new JSONPath(['a' => 'A', 'b' => 'B', 'c' => 'C']);
+
+        $lastKey = $jsonPath->lastKey();
+
+        $this->assertEquals('c', $lastKey);
+
+        // Array test for object
+        $jsonPath = new JSONPath((object) ['a' => 'A', 'b' => 'B', 'c' => 'C']);
+
+        $lastKey = $jsonPath->lastKey();
+
+        $this->assertEquals('c', $lastKey);
+    }
     public function exampleData($asArray = true)
     {
         $json = '

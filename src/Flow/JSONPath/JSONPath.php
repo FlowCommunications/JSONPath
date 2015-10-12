@@ -92,6 +92,36 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     }
 
     /**
+     * Evaluate an expression and return the first key
+     * @return mixed
+     */
+    public function firstKey()
+    {
+        $keys = AccessHelper::collectionKeys($this->data);
+
+        if (empty($keys)) {
+            return null;
+        }
+
+        return $keys[0];
+    }
+
+    /**
+     * Evaluate an expression and return the last key
+     * @return mixed
+     */
+    public function lastKey()
+    {
+        $keys = AccessHelper::collectionKeys($this->data);
+
+        if (empty($keys) || end($keys) === false) {
+            return null;
+        }
+
+        return end($keys);
+    }
+
+    /**
      * @param $expression
      * @return array
      * @throws \Exception
