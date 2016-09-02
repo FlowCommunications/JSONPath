@@ -111,6 +111,18 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * $..books[?(@.author in ["J. R. R. Tolkien", "Nigel Rees"])]
+     * Filter books that have a title in ["...", "..."]
+     */
+    public function testQueryMatchIn()
+    {
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author in ["J. R. R. Tolkien", "Nigel Rees"])].title');
+        $resultArray = $result->data();
+        $expectedArray = ['The Lord of the Rings', 'Sayings of the Century'];
+        $this->assertEquals(ksort($expectedArray), ksort($resultArray));
+    }
+
+    /**
      * $.store.books[*].author
      */
     public function testWildcardAltNotation()
