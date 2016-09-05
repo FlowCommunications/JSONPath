@@ -90,7 +90,7 @@ So here are the types of query expressions that are supported:
 	[?(@.title == "A string")] //
 	[?(@.title = "A string")]
 	// A single equals is not an assignment but the SQL-style of '=='
-    [?(@.tital in ["A string", "Another string"])]
+    [?(@.title in ["A string", "Another string"])]
 
 Similar projects
 ----------------
