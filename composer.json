@@ -14,6 +14,9 @@
         "Flow\\JSONPath\\Test": "tests/"
       }
     },
+    "require": {
+      "php": ">=5.4.0"
+    },
     "require-dev": {
       "peekmo/jsonpath": "dev-master",
       "phpunit/phpunit": "^4.0"
