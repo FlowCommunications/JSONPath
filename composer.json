@@ -16,6 +16,6 @@
     },
     "require-dev": {
       "peekmo/jsonpath": "dev-master",
-      "phpunit/phpunit": "dev-master"
+      "phpunit/phpunit": "^4.0"
     }
 }
