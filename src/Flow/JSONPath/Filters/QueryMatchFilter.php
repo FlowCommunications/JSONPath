@@ -7,7 +7,7 @@ class QueryMatchFilter extends AbstractFilter
 {
     const MATCH_QUERY_OPERATORS = '
     @(\.(?<key>\w+)|\[["\'](?<keySquare>.*?)["\']\])
-    (\s*(?<operator>==|=|<>|!==|!=|>|<)\s*(?<comparisonValue>\S.+))?
+    (\s*(?<operator>==|=|<>|!==|!=|>|<)\s*(?<comparisonValue>.+))?
     ';
 
     /**

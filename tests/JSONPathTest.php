@@ -111,6 +111,17 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * $..books[?(@.author = 1)]
+     * Filter books that have a title equal to "..."
+     */
+    public function testQueryMatchEqualsWithUnquotedInteger()
+    {
+        $results = (new JSONPath($this->exampleDataWithSimpleIntegers(rand(0, 1))))->find('$..features[?(@.value = 1)]');
+        $this->assertEquals($results[0]->name, "foo");
+        $this->assertEquals($results[1]->name, "baz");
+    }
+
+    /**
      * $..books[?(@.author != "J. R. R. Tolkien")]
      * Filter books that have a title not equal to "..."
      */
@@ -449,6 +460,17 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
                     "image/gif": "/core/img/filetypes/image.png",
                     "application/postscript": "/core/img/filetypes/image-vector.png"
                 }
+            }
+        ';
+
+        return json_decode($json, $asArray);
+    }
+
+    public function exampleDataWithSimpleIntegers($asArray = true)
+    {
+        $json = '
+            {
+                "features": [{"name": "foo", "value": 1},{"name": "bar", "value": 2},{"name": "baz", "value": 1}]
             }
         ';
 
