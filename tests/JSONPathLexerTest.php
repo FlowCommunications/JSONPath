@@ -117,6 +117,13 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('@.foo < \'bar\'', $tokens[0]->value);
     }
 
+    public function test_QueryMatch_NotEqualTO()
+    {
+        $tokens = (new \Flow\JSONPath\JSONPathLexer('[?(@.foo != \'bar\')]'))->parseExpression();
+        $this->assertEquals(JSONPathToken::T_QUERY_MATCH, $tokens[0]->type);
+        $this->assertEquals('@.foo != \'bar\'', $tokens[0]->value);
+    }
+
     public function test_QueryMatch_Brackets()
     {
         $tokens = (new \Flow\JSONPath\JSONPathLexer("[?(@['@language']='en')]"))->parseExpression();

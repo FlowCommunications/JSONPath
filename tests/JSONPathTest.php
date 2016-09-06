@@ -111,6 +111,25 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * $..books[?(@.author != "J. R. R. Tolkien")]
+     * Filter books that have a title not equal to "..."
+     */
+    public function testQueryMatchNotEqualsTo()
+    {
+        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author != "J. R. R. Tolkien")].title');
+        $this->assertcount(3, $results);
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
+
+        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author !== "J. R. R. Tolkien")].title');
+        $this->assertcount(3, $results);
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
+
+        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author <> "J. R. R. Tolkien")].title');
+        $this->assertcount(3, $results);
+        $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
+    }
+
+    /**
      * $.store.books[*].author
      */
     public function testWildcardAltNotation()

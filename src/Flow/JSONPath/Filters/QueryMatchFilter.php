@@ -7,7 +7,7 @@ class QueryMatchFilter extends AbstractFilter
 {
     const MATCH_QUERY_OPERATORS = '
     @(\.(?<key>\w+)|\[["\'](?<keySquare>.*?)["\']\])
-    (\s*(?<operator>==|=|>|<)\s*(?<comparisonValue>\S.+))?
+    (\s*(?<operator>==|=|<>|!==|!=|>|<)\s*(?<comparisonValue>\S.+))?
     ';
 
     /**
@@ -58,7 +58,7 @@ class QueryMatchFilter extends AbstractFilter
                 if (($operator === "=" || $operator === "==") && $value1 == $comparisonValue) {
                     $return[] = $value;
                 }
-                if (($operator === "!=" || $operator === "!==") && $value1 != $comparisonValue) {
+                if (($operator === "!=" || $operator === "!==" || $operator === "<>") && $value1 != $comparisonValue) {
                     $return[] = $value;
                 }
                 if ($operator == ">" && $value1 > $comparisonValue) {
