@@ -19,7 +19,7 @@ JSONPath Examples
 
 JSONPath                  | Result
 --------------------------|-------------------------------------
-`$.store.books[\*].author` | the authors of all books in the store
+`$.store.books[*].author` | the authors of all books in the store
 `$..author`                | all authors
 `$.store..price`           | the price of everything in the store.
 `$..books[2]`              | the third book
