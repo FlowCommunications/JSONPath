@@ -23,7 +23,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function __construct($data, $options = 0)
     {
-        $this->data = $data;//new ValueObject($data, '$');
+        $this->data = $data;
         $this->options = $options;
     }
 
@@ -39,7 +39,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
         $this->data=$this->data instanceof ValueObject ? new ValueObject(self::unwrap($this->data), '$'):new ValueObject($this->data, '$');
         $tokens = $this->parseTokens($expression);
 		$collectionData = [ $this->data ];
-
         foreach ($tokens as $token) {
             $filter = $token->buildFilter($this->options);
 
@@ -171,8 +170,9 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
     
 	public function paths()
     {
-        if(empty($this->data->get())) return [];
-		return array_map(function($each){ return @$each->path(); }, $this->data->get());
+		$data = $this->data instanceof ValueObject ? $this->data->get(): $this->data;
+		if(empty($data)) return new static([], $this->options);
+		return new static(array_map(function($each){ return @$each->path(); }, $data), $this->options);
     }
 
     public function offsetExists($offset)

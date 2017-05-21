@@ -28,7 +28,7 @@ class RecursiveFilter extends AbstractFilter
             foreach (AccessHelper::arrayValues($data) as $key => $value) {
 
                 if (AccessHelper::isCollectionType($value)) {
-					$this->recurse($result, new ValueObject($value, $data->path().'.'.$keys[$key]));
+					$this->recurse($result, new ValueObject($value, static::path($data->path(), $keys[$key])));
                 }
             }
         }

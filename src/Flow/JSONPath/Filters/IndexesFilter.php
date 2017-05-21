@@ -15,7 +15,8 @@ class IndexesFilter extends AbstractFilter
         $return = [];
         foreach ($this->token->value as $index) {
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
-				$return[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), $collection->path().'.'.$index);
+				$return[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), 
+                    static::path($collection->path(), $index));
             }
         }
         return $return;

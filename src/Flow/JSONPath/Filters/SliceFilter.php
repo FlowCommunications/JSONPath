@@ -69,7 +69,7 @@ class SliceFilter extends AbstractFilter
             }
             
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
-				$result[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), $path.'.'.$index);//$collection[$index];
+				$result[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), static::path($path, $index));
             }
         }
 

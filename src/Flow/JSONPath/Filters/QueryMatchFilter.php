@@ -20,7 +20,10 @@ class QueryMatchFilter extends AbstractFilter
     {
         $return = [];
 
-        preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->token->value, $matches);
+        $path = @$collection->path();
+        $collection = $collection->get();
+        
+		preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->token->value, $matches);
 
         if (!isset($matches[1])) {
             throw new \Exception("Malformed filter query");
@@ -48,26 +51,30 @@ class QueryMatchFilter extends AbstractFilter
         $comparisonValue = preg_replace('/^[\'"]/', '', $comparisonValue);
         $comparisonValue = preg_replace('/[\'"]$/', '', $comparisonValue);
 
-        foreach ($collection as $value) {
-            if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
+		foreach ($collection as $k => $value) {
+            
+			if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
+                
+                $resultPath = static::path($path, $k);
+                
                 $value1 = AccessHelper::getValue($value, $key, $this->magicIsAllowed);
 				if($value1 instanceof ValueObject) $value1 = $value1->get();
 
                 if ($operator === null && AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
-					$return[] = new ValueObject($value, $collection->path().'.'.$key);
+					$return[] = new ValueObject($value, $resultPath);
                 }
 
                 if (($operator === "=" || $operator === "==") && $value1 == $comparisonValue) {
-					$return[] = new ValueObject($value, $collection->path().'.'.$key);
+					$return[] = new ValueObject($value, $resultPath);
                 }
                 if (($operator === "!=" || $operator === "!==" || $operator === "<>") && $value1 != $comparisonValue) {
-					$return[] = new ValueObject($value, $collection->path().'.'.$key);
+					$return[] = new ValueObject($value, $resultPath);
                 }
                 if ($operator == ">" && $value1 > $comparisonValue) {
-					$return[] = new ValueObject($value, $collection->path().'.'.$key);
+					$return[] = new ValueObject($value, $resultPath);
                 }
                 if ($operator == "<" && $value1 < $comparisonValue) {
-					$return[] = new ValueObject($value, $collection->path().'.'.$key);
+					$return[] = new ValueObject($value, $resultPath);
                 }
             }
         }

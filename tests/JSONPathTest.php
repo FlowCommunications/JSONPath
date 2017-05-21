@@ -371,10 +371,26 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $result = (new JSONPath($this->exampleData(rand(0, 1))))->find('$.store.books[0].title');
         $resultWithPath = $result->dataWithPath();
         $this->assertEquals('Sayings of the Century', $resultWithPath[0]->get());
-        $this->assertEquals('$.store.books.0.title', $resultWithPath[0]->path());
+        $this->assertEquals("$['store']['books'][0]['title']", $resultWithPath[0]->path());
+        
+		$result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][0]['title']");
+        $resultWithPath = $result->dataWithPath();
+		$this->assertEquals('Sayings of the Century', $resultWithPath[0]->get());
+		$this->assertEquals("$['store']['books'][0]['title']", $resultWithPath[0]->path());
+        
+		$result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][:].title");
+		$this->assertEquals(["$['store']['books'][0]['title']", "$['store']['books'][1]['title']", "$['store']['books'][2]['title']", "$['store']['books'][3]['title']"], $result->paths()->data());
+
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[?(@.isbn)].isbn");
+		$this->assertEquals(["$['store']['books'][2]['isbn']", "$['store']['books'][3]['isbn']"], $result->paths()->data());
+
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[(@.length-1)].title");
+        $this->assertEquals(["$['store']['books'][3]['title']"], $result->paths()->data());
+       	
+		$result = (new JSONPath($this->exampleDataExtra()))->find("$['http://www.w3.org/2000/01/rdf-schema#label'][?(@['@language']='en')]['@language']");
+		$this->assertEquals(["$['http://www.w3.org/2000/01/rdf-schema#label'][0]['@language']"], $result->paths()->data());
     }
-
-
+    
     public function exampleData($asArray = true)
     {
         $json = '

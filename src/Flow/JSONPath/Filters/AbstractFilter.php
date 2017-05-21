@@ -29,6 +29,10 @@ abstract class AbstractFilter
     {
         return $this->magicIsAllowed;
     }
+    
+    protected static function path($base, $key){
+        return $base . '[' . (is_numeric($key) ? $key : "'" . $key . "'") . ']';
+    }
 
     /**
      * @param $collection

@@ -50,7 +50,7 @@ class QueryResultFilter extends AbstractFilter
         }
 
         if (AccessHelper::keyExists($collection, $resultKey, $this->magicIsAllowed)) {
-            $result[] = new ValueObject(AccessHelper::getValue($collection, $resultKey, $this->magicIsAllowed), $path.'.'.$resultKey);
+            $result[] = new ValueObject(AccessHelper::getValue($collection, $resultKey, $this->magicIsAllowed), static::path($path, $resultKey));
         }
 
         return $result;
