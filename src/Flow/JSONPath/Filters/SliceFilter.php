@@ -2,6 +2,7 @@
 namespace Flow\JSONPath\Filters;
 
 use Flow\JSONPath\AccessHelper;
+use Flow\JSONPath\ValueObject;
 
 class SliceFilter extends AbstractFilter
 {
@@ -24,6 +25,8 @@ class SliceFilter extends AbstractFilter
         a[:-2]   # everything except the last two items
 
          */
+        $path = @$collection->path();
+        $collection = $collection instanceof ValueObject ? $collection->get() : $collection;
 
         $result = [];
 
@@ -64,9 +67,9 @@ class SliceFilter extends AbstractFilter
             if ($i < 0) {
                 $index = $length + $i;
             }
-
+            
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
-                $result[] = $collection[$index];
+				$result[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), $path.'.'.$index);//$collection[$index];
             }
         }
 

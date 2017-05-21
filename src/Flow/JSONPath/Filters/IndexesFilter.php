@@ -2,6 +2,7 @@
 namespace Flow\JSONPath\Filters;
 
 use Flow\JSONPath\AccessHelper;
+use Flow\JSONPath\ValueObject;
 
 class IndexesFilter extends AbstractFilter
 {
@@ -14,7 +15,7 @@ class IndexesFilter extends AbstractFilter
         $return = [];
         foreach ($this->token->value as $index) {
             if (AccessHelper::keyExists($collection, $index, $this->magicIsAllowed)) {
-                $return[] = AccessHelper::getValue($collection, $index, $this->magicIsAllowed);
+				$return[] = new ValueObject(AccessHelper::getValue($collection, $index, $this->magicIsAllowed), $collection->path().'.'.$index);
             }
         }
         return $return;

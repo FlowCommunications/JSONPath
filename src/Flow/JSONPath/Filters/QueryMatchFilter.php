@@ -2,6 +2,7 @@
 namespace Flow\JSONPath\Filters;
 
 use Flow\JSONPath\AccessHelper;
+use Flow\JSONPath\ValueObject;
 
 class QueryMatchFilter extends AbstractFilter
 {
@@ -50,22 +51,23 @@ class QueryMatchFilter extends AbstractFilter
         foreach ($collection as $value) {
             if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
                 $value1 = AccessHelper::getValue($value, $key, $this->magicIsAllowed);
+				if($value1 instanceof ValueObject) $value1 = $value1->get();
 
                 if ($operator === null && AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {
-                    $return[] = $value;
+					$return[] = new ValueObject($value, $collection->path().'.'.$key);
                 }
 
                 if (($operator === "=" || $operator === "==") && $value1 == $comparisonValue) {
-                    $return[] = $value;
+					$return[] = new ValueObject($value, $collection->path().'.'.$key);
                 }
                 if (($operator === "!=" || $operator === "!==" || $operator === "<>") && $value1 != $comparisonValue) {
-                    $return[] = $value;
+					$return[] = new ValueObject($value, $collection->path().'.'.$key);
                 }
                 if ($operator == ">" && $value1 > $comparisonValue) {
-                    $return[] = $value;
+					$return[] = new ValueObject($value, $collection->path().'.'.$key);
                 }
                 if ($operator == "<" && $value1 < $comparisonValue) {
-                    $return[] = $value;
+					$return[] = new ValueObject($value, $collection->path().'.'.$key);
                 }
             }
         }

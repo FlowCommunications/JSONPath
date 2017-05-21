@@ -5,8 +5,9 @@ use ArrayAccess;
 use Iterator;
 use JsonSerializable;
 use Flow\JsonPath\Filters\AbstractFilter;
+use Countable;
 
-class JSONPath implements ArrayAccess, Iterator, JsonSerializable
+class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
 {
     protected static $tokenCache = [];
 
@@ -22,7 +23,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
      */
     public function __construct($data, $options = 0)
     {
-        $this->data = $data;
+        $this->data = $data;//new ValueObject($data, '$');
         $this->options = $options;
     }
 
@@ -35,9 +36,9 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
      */
     public function find($expression)
     {
+        $this->data=$this->data instanceof ValueObject ? new ValueObject(self::unwrap($this->data), '$'):new ValueObject($this->data, '$');
         $tokens = $this->parseTokens($expression);
-
-        $collectionData = [$this->data];
+		$collectionData = [ $this->data ];
 
         foreach ($tokens as $token) {
             $filter = $token->buildFilter($this->options);
@@ -45,15 +46,14 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
             $filteredData = [];
 
             foreach ($collectionData as $value) {
+
                 if (AccessHelper::isCollectionType($value)) {
                     $filteredValue = $filter->filter($value);
                     $filteredData = array_merge($filteredData, $filteredValue);
                 }
             }
-
             $collectionData = $filteredData;
         }
-
 
         return new static($collectionData, $this->options);
     }
@@ -148,7 +148,31 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
      */
     public function data()
     {
+		return self::unwrap($this->data);
+    }
+
+    private static function unwrap($data, $rec=true){
+        $data = $data instanceof ValueObject ? $data->get() : $data;
+        if(AccessHelper::isCollectionType($data) && $rec){
+            foreach ($data as $key=>$value){
+                AccessHelper::setValue($data, $key, self::unwrap($value, $rec));
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function dataWithPath()
+    {
         return $this->data;
+    }
+    
+	public function paths()
+    {
+        if(empty($this->data->get())) return [];
+		return array_map(function($each){ return @$each->path(); }, $this->data->get());
     }
 
     public function offsetExists($offset)
@@ -162,7 +186,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
 
         return AccessHelper::isCollectionType($value)
             ? new static($value, $this->options)
-            : $value;
+			: self::unwrap($value, false);
     }
 
     public function offsetSet($offset, $value)
@@ -225,6 +249,11 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     {
         reset($this->data);
     }
+    
+    public function count()
+    {
+        return count($this->data);
+    }
 
     /**
      * @param $key
@@ -234,5 +263,4 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
     {
         return $this->offsetExists($key) ? $this->offsetGet($key) : null;
     }
-
 }

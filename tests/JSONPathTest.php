@@ -365,6 +365,14 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('c', $lastKey);
     }
+    
+    public function testResultPath()
+    {
+        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find('$.store.books[0].title');
+        $resultWithPath = $result->dataWithPath();
+        $this->assertEquals('Sayings of the Century', $resultWithPath[0]->get());
+        $this->assertEquals('$.store.books.0.title', $resultWithPath[0]->path());
+    }
 
 
     public function exampleData($asArray = true)

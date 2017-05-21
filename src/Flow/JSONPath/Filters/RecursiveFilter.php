@@ -3,6 +3,7 @@ namespace Flow\JSONPath\Filters;
 
 use Flow\JSONPath\AccessHelper;
 use Flow\Oauth2\Client\Token\Access;
+use Flow\JSONPath\ValueObject;
 
 class RecursiveFilter extends AbstractFilter
 {
@@ -15,20 +16,19 @@ class RecursiveFilter extends AbstractFilter
         $result = [];
 
         $this->recurse($result, $collection);
-
         return $result;
     }
 
     private function recurse(& $result, $data)
     {
-        $result[] = $data;
+		$result[] = new ValueObject($data, $data->path());
 
         if (AccessHelper::isCollectionType($data)) {
+			$keys = AccessHelper::arrayKeys($data);
             foreach (AccessHelper::arrayValues($data) as $key => $value) {
-                $results[] = $value;
 
                 if (AccessHelper::isCollectionType($value)) {
-                    $this->recurse($result, $value);
+					$this->recurse($result, new ValueObject($value, $data->path().'.'.$keys[$key]));
                 }
             }
         }

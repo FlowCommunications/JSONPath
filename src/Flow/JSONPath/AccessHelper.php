@@ -5,6 +5,8 @@ class AccessHelper
 {
     public static function collectionKeys($collection)
     {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+
         if (is_object($collection)) {
             return array_keys(get_object_vars($collection));
         } else {
@@ -14,15 +16,18 @@ class AccessHelper
 
     public static function isCollectionType($collection)
     {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+
         return is_array($collection) || is_object($collection);
     }
 
     public static function keyExists($collection, $key, $magicIsAllowed = false)
     {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+
         if ($magicIsAllowed && is_object($collection) && method_exists($collection, '__get')) {
             return true;
         }
-
         if (is_array($collection) || $collection instanceof \ArrayAccess) {
             return array_key_exists($key, $collection);
         } else if (is_object($collection)) {
@@ -32,7 +37,9 @@ class AccessHelper
 
     public static function getValue($collection, $key, $magicIsAllowed = false)
     {
-        if ($magicIsAllowed && is_object($collection) && method_exists($collection, '__get')) {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+        
+		if ($magicIsAllowed && is_object($collection) && method_exists($collection, '__get')) {
             return $collection->__get($key);
         }
 
@@ -63,7 +70,9 @@ class AccessHelper
 
     public static function arrayValues($collection)
     {
-        if (is_array($collection)) {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+        
+		if (is_array($collection)) {
             return array_values($collection);
         } else if (is_object($collection)) {
             return array_values((array) $collection);
@@ -71,5 +80,17 @@ class AccessHelper
 
         throw new JSONPathException("Invalid variable type for arrayValues");
     }
+	
+	public static function arrayKeys($collection)
+    {
+		if($collection instanceof ValueObject) $collection = $collection->get();
+        
+		if (is_array($collection)) {
+            return array_keys($collection);
+        } else if (is_object($collection)) {
+            return array_keys((array) $collection);
+        }
 
+        throw new JSONPathException("Invalid variable type for arrayValues");
+    }
 }
