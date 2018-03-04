@@ -9,8 +9,8 @@ class JSONPathLexer
      * Match within bracket groups
      * Matches are whitespace insensitive
      */
-    const MATCH_INDEX        = '\w+ | \*'; // Eg. foo
-    const MATCH_INDEXES      = '\s* \d+ [\d,\s]+'; // Eg. 0,1,2
+    const MATCH_INDEX        = '-?\w+ | \*'; // Eg. foo
+    const MATCH_INDEXES      = '\s* -?\d+ [-?\d,\s]+'; // Eg. 0,1,2
     const MATCH_SLICE        = '[-\d:]+ | :'; // Eg. [0:2:1]
     const MATCH_QUERY_RESULT = '\s* \( .+? \) \s*'; // Eg. ?(@.length - 1)
     const MATCH_QUERY_MATCH  = '\s* \?\(.+?\) \s*'; // Eg. ?(@.foo = "bar")
@@ -156,6 +156,9 @@ class JSONPathLexer
     protected function createToken($value)
     {
         if (preg_match('/^(' . static::MATCH_INDEX . ')$/x', $value, $matches)) {
+            if (preg_match('/^-?\d+$/', $value)) {
+                $value = (int)$value;
+            }
             return new JSONPathToken(JSONPathToken::T_INDEX, $value);
         }
 

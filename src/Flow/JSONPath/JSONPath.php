@@ -2,11 +2,12 @@
 namespace Flow\JSONPath;
 
 use ArrayAccess;
+use Countable;
 use Iterator;
 use JsonSerializable;
 use Flow\JsonPath\Filters\AbstractFilter;
 
-class JSONPath implements ArrayAccess, Iterator, JsonSerializable
+class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
 {
     protected static $tokenCache = [];
 
@@ -235,4 +236,11 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable
         return $this->offsetExists($key) ? $this->offsetGet($key) : null;
     }
 
+    /**
+     * Count elements of an object
+     */
+    public function count()
+    {
+        return count($this->data);
+    }
 }
