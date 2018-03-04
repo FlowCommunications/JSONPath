@@ -390,6 +390,48 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Herman Melville", $result[0]['author']);
     }
 
+    public function testQueryAccessWithNumericalIndexes()
+    {
+        $jsonPath = new JSONPath(json_decode('{
+            "result": {
+                "list": [
+                    {
+                        "time": 1477526400,
+                        "o": "11.51000"
+                    },
+                    {
+                        "time": 1477612800,
+                        "o": "11.49870"
+                    }
+                ]
+            }
+        }'));
+
+        $result = $jsonPath->find("$.result.list[?(@.o == \"11.51000\")]");
+
+        $this->assertEquals("11.51000", $result[0]->o);
+
+        $jsonPath = new JSONPath(json_decode('{
+            "result": {
+                "list": [
+                    [
+                        1477526400,
+                        "11.51000"
+                    ],
+                    [
+                        1477612800,
+                        "11.49870"
+                    ]
+                ]
+            }
+        }'));
+
+        $result = $jsonPath->find("$.result.list[?(@[1] == \"11.51000\")]");
+
+        $this->assertEquals("11.51000", $result[0][1]);
+
+    }
+
 
     public function exampleData($asArray = true)
     {
