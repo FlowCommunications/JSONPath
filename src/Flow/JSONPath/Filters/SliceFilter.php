@@ -23,6 +23,11 @@ class SliceFilter extends AbstractFilter
         a[-2:]   # last two items in the array
         a[:-2]   # everything except the last two items
 
+        a[::2] # each second item start from first
+        a[2::2] # each second item start from 3rd index (0-based)
+        a[:-2:2] # each second item start from first, till end-2
+        a[1:5:2] # each second item start from 2nd index, till 6th index
+
          */
 
         $result = [];

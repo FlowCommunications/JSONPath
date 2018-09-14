@@ -24,8 +24,11 @@ JSONPath                  | Result
 `$.store..price`           | the price of everything in the store.
 `$..books[2]`              | the third book
 `$..books[(@.length-1)]`   | the last book in order.
+`$..books[-1:]`            | the last book in order.
 `$..books[0,1]`            | the first two books
 `$..books[:2]`             | the first two books
+`$..books[::2]`            | every second book starting from first one
+`$..books[1:6:3]`          | every third book starting from 1 till 6
 `$..books[?(@.isbn)]`      | filter all books with isbn number
 `$..books[?(@.price<10)]`  | filter all books cheapier than 10
 `$..*`                     | all elements in the data (recursively extracted)
