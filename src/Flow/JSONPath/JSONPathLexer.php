@@ -35,20 +35,26 @@ class JSONPathLexer
     {
         $expression = trim($expression);
 
-        if (!strlen($expression)) {
+        $len = strlen($expression);
+        if (!$len) {
             return;
         }
 
         if ($expression[0] === '$') {
+            if ($len === 1) {
+                return;
+            }
             $expression = substr($expression, 1);
+            $len--;
         }
 
         if ($expression[0] !== '.' && $expression[0] !== '[') {
             $expression = '.' . $expression;
+            $len++;
         }
 
         $this->expression = $expression;
-        $this->expressionLength = strlen($expression);
+        $this->expressionLength = $len;
     }
 
     public function parseExpressionTokens()
