@@ -5,7 +5,7 @@ This is a [JSONPath](http://goessner.net/articles/JsonPath/) implementation for 
 
 JSONPath is an XPath-like expression language for filtering, flattening and extracting data.
 
-I believe that is improves on the original script (which was last updated in 2007) by doing a few things:
+I believe that this improves on the original script (which was last updated in 2007) by doing a few things:
 
 -   Object-oriented code (should be easier to manage or extend in future)
 -   Expressions are parsed into tokens using some code cribbed from Doctrine Lexer and cached
@@ -13,6 +13,13 @@ I believe that is improves on the original script (which was last updated in 200
 -   Performance is pretty much the same
 -   Any combination of objects/arrays/ArrayAccess-objects can be used as the data input which is great if you're de-serializing JSON in to objects
     or if you want to process your own data structures.
+
+Installation
+---
+
+```bash
+composer require flow/jsonpath
+```
 
 JSONPath Examples
 ---
