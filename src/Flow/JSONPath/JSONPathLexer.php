@@ -35,27 +35,36 @@ class JSONPathLexer
     {
         $expression = trim($expression);
 
-        if (!strlen($expression)) {
+        $len = strlen($expression);
+        if (!$len) {
             return;
         }
 
         if ($expression[0] === '$') {
+            if ($len === 1) {
+                return;
+            }
             $expression = substr($expression, 1);
+            $len--;
         }
 
         if ($expression[0] !== '.' && $expression[0] !== '[') {
             $expression = '.' . $expression;
+            $len++;
         }
 
         $this->expression = $expression;
-        $this->expressionLength = strlen($expression);
+        $this->expressionLength = $len;
     }
 
+    /**
+     * @return array
+     * @throws JSONPathException
+     */
     public function parseExpressionTokens()
     {
         $dotIndexDepth = 0;
         $squareBracketDepth = 0;
-        $capturing = false;
         $tokenValue = '';
         $tokens = [];
 
@@ -124,7 +133,6 @@ class JSONPathLexer
 
         if ($tokenValue !== '') {
             $tokens[] = $this->createToken($tokenValue);
-            $tokenValue = '';
         }
 
         return $tokens;
@@ -152,6 +160,7 @@ class JSONPathLexer
     /**
      * @param $value
      * @return string
+     * @throws JSONPathException
      */
     protected function createToken($value)
     {
@@ -212,5 +221,4 @@ class JSONPathLexer
 
         throw new JSONPathException("Unable to parse token {$value} in expression: $this->expression");
     }
-
 }
