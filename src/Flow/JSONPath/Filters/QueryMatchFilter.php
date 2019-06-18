@@ -67,6 +67,10 @@ class QueryMatchFilter extends AbstractFilter
                 if ($operator == "<" && $value1 < $comparisonValue) {
                     $return[] = $value;
                 }
+            } else {
+                if ($comparisonValue == null) {
+                    $return[] = $value;
+                }
             }
         }
 
