@@ -111,6 +111,16 @@ class JSONPathTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * $..books[?(@.isbn == null)].title
+     * Filter books that don't have a isbn field
+     */
+    public function testQueryMatchNull()
+    {
+        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.isbn == null)].title');
+        $this->assertEquals($results->data(), array('Sayings of the Century', 'Sword of Honour'));
+    }
+
+    /**
      * $..books[?(@.author = 1)]
      * Filter books that have a title equal to "..."
      */
