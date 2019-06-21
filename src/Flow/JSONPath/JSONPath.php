@@ -21,10 +21,20 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      * @param $data
      * @param int $options
      */
-    public function __construct($data, $options = 0)
+    public function __construct($data = null, $options = 0)
     {
         $this->data = $data;
         $this->options = $options;
+    }
+
+    /**
+     * @param null $data
+     * @return JSONPath
+     */
+    public function setData($data): JSONPath
+    {
+        $this->data = $data;
+        return $this;
     }
 
     /**
