@@ -116,6 +116,8 @@ with a new name and extra features.
 
 Changelog
 ---------
+### 0.5.0
+ - Fixed the slice notation (eg. [0:2:5] etc.). **Breaks code relying on the broken implementation**
 
 ### 0.3.0
  - Added JSONPathToken class as value object
