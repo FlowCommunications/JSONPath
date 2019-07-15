@@ -134,7 +134,6 @@ class JSONPathLexerTest extends TestCase
 
     }
 
-
     public function test_Recursive_Simple()
     {
         $tokens = (new \Flow\JSONPath\JSONPathLexer('..foo'))->parseExpression();
@@ -143,7 +142,6 @@ class JSONPathLexerTest extends TestCase
         $this->assertEquals(null, $tokens[0]->value);
         $this->assertEquals('foo', $tokens[1]->value);
     }
-
 
     public function test_Recursive_Wildcard()
     {
@@ -154,7 +152,6 @@ class JSONPathLexerTest extends TestCase
         $this->assertEquals('*', $tokens[1]->value);
     }
 
-
     /**
      * @expectedException           Flow\JSONPath\JSONPathException
      * @expectedExceptionMessage    Unable to parse token ba^r in expression: ..ba^r
@@ -163,7 +160,6 @@ class JSONPathLexerTest extends TestCase
     {
         $tokens = (new JSONPathLexer('..ba^r'))->parseExpression();
     }
-
 
     /**
      */
@@ -182,7 +178,10 @@ class JSONPathLexerTest extends TestCase
         $this->assertEquals([1,2,3], $tokens[0]->value);
     }
 
-
+    public function test_Root_Expression()
+    {
+        $tokens = (new JSONPathLexer('$'));
+    }
 
 
 
