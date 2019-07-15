@@ -369,6 +369,17 @@ class JSONPathTest extends TestCase
         );
     }
 
+    public function testCyrillicText()
+    {
+        $result = (new JSONPath(["трололо" => 1]))->find("$['трололо']");
+
+        $this->assertEquals([1], $result->data());
+
+        $result = (new JSONPath(["трололо" => 1]))->find("$.трололо");
+
+        $this->assertEquals([1], $result->data());
+    }
+
     public function testOffsetUnset()
     {
         $data = [
