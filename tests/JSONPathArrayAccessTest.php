@@ -2,10 +2,11 @@
 namespace Flow\JSONPath\Test;
 
 use Flow\JSONPath\JSONPath;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-class JSONPathArrayAccessTest extends \PHPUnit_Framework_TestCase
+class JSONPathArrayAccessTest extends TestCase
 {
     public function testChaining()
     {
