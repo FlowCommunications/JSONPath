@@ -5,21 +5,27 @@ This is a [JSONPath](http://goessner.net/articles/JsonPath/) implementation for 
 
 JSONPath is an XPath-like expression language for filtering, flattening and extracting data.
 
-I believe that this improves on the original script (which was last updated in 2007) by doing a few things:
+This project aims to be a clean and simple implementation with the following goals:
 
 -   Object-oriented code (should be easier to manage or extend in future)
--   Expressions are parsed into tokens using some code cribbed from Doctrine Lexer and cached
+-   Expressions are parsed into tokens using code inspired by the Doctrine Lexer. The tokens are cached internally to avoid re-parsing the expressions.
 -   There is no `eval()` in use
--   Performance is pretty much the same
 -   Any combination of objects/arrays/ArrayAccess-objects can be used as the data input which is great if you're de-serializing JSON in to objects
     or if you want to process your own data structures.
 
 Installation
 ---
 
+**PHP 7.1+**
 ```bash
 composer require flow/jsonpath
 ```
+**PHP 5.4 - 5.6**
+
+Support for PHP 5.x is deprecated... the current version should work but all unit tests are run against 7.1+ and support may be dropped at any time in the future.
+
+A legacy branch is maintained in `php-5.x` and can be composer-installed as follows:  
+`"flow/jsonpath": "dev-php-5.x"`
 
 JSONPath Examples
 ---
@@ -100,9 +106,14 @@ So here are the types of query expressions that are supported:
 	[?(@.title == "A string")] //
 	[?(@.title = "A string")]
 	// A single equals is not an assignment but the SQL-style of '=='
+	
+Known issues
+------
+- This project has not implemented multiple string indexes eg. `$[name,year]` or `$["name","year"]`. I have no ETA on that feature and it would require some re-writing of the parser that uses a very basic regex implementation.
 
 Similar projects
 ----------------
+[Galbar/JsonPath-PHP](https://github.com/Galbar/JsonPath-PHP) is a PHP implementation that does a few things this project doesn't and is a strong alternative
 
 [JMESPath](https://github.com/jmespath) does similiar things, is full of features and has a PHP implementation
 
