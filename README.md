@@ -1,4 +1,4 @@
-JSONPath
+JSONPath [![Build Status](https://travis-ci.org/FlowCommunications/JSONPath.svg?branch=master)](https://travis-ci.org/klugjo/hexo-autolinker)
 =============
 
 This is a [JSONPath](http://goessner.net/articles/JsonPath/) implementation for PHP based on Stefan Goessner's JSONPath script.
