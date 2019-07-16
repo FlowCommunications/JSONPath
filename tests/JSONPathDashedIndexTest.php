@@ -6,7 +6,7 @@ namespace Flow\JSONPath\Test;
 use Flow\JSONPath\JSONPath;
 use PHPUnit\Framework\TestCase;
 
-class JSONPathDashedIndexTest extends TestCase
+class JSONPathDashedIndexTest extends \PHPUnit_Framework_TestCase
 {
     public function indexDataProvider()
     {

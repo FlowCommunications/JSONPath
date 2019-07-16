@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-class JSONPathArrayAccessTest extends TestCase
+class JSONPathArrayAccessTest extends \PHPUnit_Framework_TestCase
 {
     public function testChaining()
     {

@@ -4,9 +4,8 @@ namespace Flow\JSONPath\Test;
 
 
 use Flow\JSONPath\JSONPath;
-use PHPUnit\Framework\TestCase;
 
-class JSONPathSliceAccessTest extends TestCase
+class JSONPathSliceAccessTest extends \PHPUnit_Framework_TestCase
 {
     public function sliceDataProvider()
     {

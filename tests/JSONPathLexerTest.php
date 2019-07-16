@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-class JSONPathLexerTest extends TestCase
+class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
 {
     public function test_Index_Wildcard()
     {

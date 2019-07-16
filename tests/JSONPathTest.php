@@ -5,9 +5,8 @@ namespace Flow\JSONPath\Test;
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use Flow\JSONPath\JSONPath;
-use PHPUnit\Framework\TestCase;
 
-class JSONPathTest extends TestCase
+class JSONPathTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
