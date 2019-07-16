@@ -93,7 +93,7 @@ class JSONPathLexerTest extends TestCase
     public function test_Index_NegativeIndex()
     {
         $tokens = (new \Flow\JSONPath\JSONPathLexer('[-1]'))->parseExpression();
-        $this->assertEquals(JSONPathToken::T_INDEX, $tokens[0]->type);
+        $this->assertEquals(JSONPathToken::T_SLICE, $tokens[0]->type);
         $this->assertEquals(['start' => -1, 'end' => null, 'step' => null], $tokens[0]->value);
     }
 
@@ -176,11 +176,6 @@ class JSONPathLexerTest extends TestCase
         $tokens = (new JSONPathLexer('[ 1,2 , 3]'))->parseExpression();
         $this->assertEquals(JSONPathToken::T_INDEXES, $tokens[0]->type);
         $this->assertEquals([1,2,3], $tokens[0]->value);
-    }
-
-    public function test_Root_Expression()
-    {
-        $tokens = (new JSONPathLexer('$'));
     }
 
 
