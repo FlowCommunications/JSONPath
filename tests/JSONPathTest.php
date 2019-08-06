@@ -449,6 +449,22 @@ class JSONPathTest extends TestCase
         $this->assertCount(3, $result);
     }
 
+
+
+    /**
+     * Test: ensure comma ...
+     */
+    public function testComma()
+    {
+        $jsonPath = new JSONPath($this->exampleData() );
+
+        $result = $jsonPath->find('$.store.bicycle[color,price]')->first();
+
+        $this->assertCount(2, $result);
+    }
+
+
+
     /**
      * Test: ensure negative indexes return -n from last index
      */
