@@ -164,6 +164,18 @@ class JSONPathLexer
      */
     protected function createToken($value)
     {
+         if (preg_match('/^' . static::MATCH_SLICE . '$/xu', $value, $matches)) {
+            $parts = explode(':', $value);
+
+            $value = [
+                'start' => isset($parts[0]) && $parts[0] !== "" ? (int) $parts[0] : null,
+                'end'   => isset($parts[1]) && $parts[1] !== "" ? (int) $parts[1] : null,
+                'step'  => isset($parts[2]) && $parts[2] !== "" ? (int) $parts[2] : null,
+            ];
+
+            return new JSONPathToken(JSONPathToken::T_SLICE, $value);
+        }
+        
         if (preg_match('/^(' . static::MATCH_INDEX . ')$/xu', $value, $matches)) {
             if (preg_match('/^-?\d+$/', $value)) {
                 $value = (int)$value;
@@ -179,18 +191,6 @@ class JSONPathLexer
             }
 
             return new JSONPathToken(JSONPathToken::T_INDEXES, $value);
-        }
-
-        if (preg_match('/^' . static::MATCH_SLICE . '$/xu', $value, $matches)) {
-            $parts = explode(':', $value);
-
-            $value = [
-                'start' => isset($parts[0]) && $parts[0] !== "" ? (int) $parts[0] : null,
-                'end'   => isset($parts[1]) && $parts[1] !== "" ? (int) $parts[1] : null,
-                'step'  => isset($parts[2]) && $parts[2] !== "" ? (int) $parts[2] : null,
-            ];
-
-            return new JSONPathToken(JSONPathToken::T_SLICE, $value);
         }
 
         if (preg_match('/^' . static::MATCH_QUERY_RESULT . '$/xu', $value)) {
