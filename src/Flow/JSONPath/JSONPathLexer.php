@@ -9,7 +9,7 @@ class JSONPathLexer
      * Match within bracket groups
      * Matches are whitespace insensitive
      */
-    const MATCH_INDEX        = '(?!\-)[\-\w]+ | \*'; // Eg. foo or 40f35757-2563-4790-b0b1-caa904be455f
+    const MATCH_INDEX        = '(?!\-)[\-\:\w]+ | \*'; // Eg. foo or 40f35757-2563-4790-b0b1-caa904be455f
     const MATCH_INDEXES      = '\s* -?\d+ [-?\d,\s]+'; // Eg. 0,1,2
     const MATCH_SLICE        = '[-\d:]+ | :'; // Eg. [0:2:1]
     const MATCH_QUERY_RESULT = '\s* \( .+? \) \s*'; // Eg. ?(@.length - 1)
