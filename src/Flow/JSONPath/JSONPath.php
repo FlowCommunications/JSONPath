@@ -48,7 +48,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
             foreach ($collectionData as $value) {
                 if (AccessHelper::isCollectionType($value)) {
                     $filteredValue = $filter->filter($value);
-                    $filteredData = array_merge($filteredData, $filteredValue);
+                    $filteredData = \array_merge($filteredData, $filteredValue);
                 }
             }
 
@@ -87,7 +87,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
             return null;
         }
 
-        $value = $this->data[end($keys)] ? $this->data[end($keys)] : null;
+        $value = $this->data[\end($keys)] ? $this->data[\end($keys)] : null;
 
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
     }
@@ -115,11 +115,11 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
     {
         $keys = AccessHelper::collectionKeys($this->data);
 
-        if (empty($keys) || end($keys) === false) {
+        if (empty($keys) || \end($keys) === false) {
             return null;
         }
 
-        return end($keys);
+        return \end($keys);
     }
 
     /**
@@ -129,7 +129,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function parseTokens($expression)
     {
-        $cacheKey = md5($expression);
+        $cacheKey = \md5($expression);
 
         if (isset(static::$tokenCache[$cacheKey])) {
             return static::$tokenCache[$cacheKey];
@@ -190,7 +190,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function current()
     {
-        $value = current($this->data);
+        $value = \current($this->data);
 
         return AccessHelper::isCollectionType($value) ? new static($value, $this->options) : $value;
     }
@@ -200,7 +200,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function next()
     {
-        next($this->data);
+        \next($this->data);
     }
 
     /**
@@ -208,7 +208,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function key()
     {
-        return key($this->data);
+        return \key($this->data);
     }
 
     /**
@@ -216,7 +216,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function valid()
     {
-        return key($this->data) !== null;
+        return \key($this->data) !== null;
     }
 
     /**
@@ -224,7 +224,7 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function rewind()
     {
-        reset($this->data);
+        \reset($this->data);
     }
 
     /**
@@ -241,6 +241,6 @@ class JSONPath implements ArrayAccess, Iterator, JsonSerializable, Countable
      */
     public function count()
     {
-        return count($this->data);
+        return \count($this->data);
     }
 }

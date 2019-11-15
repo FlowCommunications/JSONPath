@@ -27,7 +27,7 @@ class JSONPathLexerTest extends TestCase
     {
         $tokens = (new JSONPathLexer('..teams.*'))->parseExpression();
 
-        $this->assertEquals(3, count($tokens));
+        $this->assertEquals(3, \count($tokens));
 
         $this->assertEquals(JSONPathToken::T_RECURSIVE, $tokens[0]->type);
         $this->assertEquals(null, $tokens[0]->value);

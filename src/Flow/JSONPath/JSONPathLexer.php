@@ -33,9 +33,9 @@ class JSONPathLexer
 
     public function __construct($expression)
     {
-        $expression = trim($expression);
+        $expression = \trim($expression);
 
-        $len = strlen($expression);
+        $len = \strlen($expression);
         if (!$len) {
             return;
         }
@@ -44,7 +44,7 @@ class JSONPathLexer
             if ($len === 1) {
                 return;
             }
-            $expression = substr($expression, 1);
+            $expression = \substr($expression, 1);
             $len--;
         }
 
@@ -164,25 +164,25 @@ class JSONPathLexer
      */
     protected function createToken($value)
     {
-        if (preg_match('/^(' . static::MATCH_INDEX . ')$/xu', $value, $matches)) {
-            if (preg_match('/^-?\d+$/', $value)) {
+        if (\preg_match('/^(' . static::MATCH_INDEX . ')$/xu', $value, $matches)) {
+            if (\preg_match('/^-?\d+$/', $value)) {
                 $value = (int)$value;
             }
             return new JSONPathToken(JSONPathToken::T_INDEX, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_INDEXES . '$/xu', $value, $matches)) {
-            $value = explode(',', trim($value, ','));
+        if (\preg_match('/^' . static::MATCH_INDEXES . '$/xu', $value, $matches)) {
+            $value = \explode(',', \trim($value, ','));
 
             foreach ($value as $i => $v) {
-                $value[$i] = (int) trim($v);
+                $value[$i] = (int) \trim($v);
             }
 
             return new JSONPathToken(JSONPathToken::T_INDEXES, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_SLICE . '$/xu', $value, $matches)) {
-            $parts = explode(':', $value);
+        if (\preg_match('/^' . static::MATCH_SLICE . '$/xu', $value, $matches)) {
+            $parts = \explode(':', $value);
 
             $value = [
                 'start' => isset($parts[0]) && $parts[0] !== "" ? (int) $parts[0] : null,
@@ -193,28 +193,28 @@ class JSONPathLexer
             return new JSONPathToken(JSONPathToken::T_SLICE, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_QUERY_RESULT . '$/xu', $value)) {
-            $value = substr($value, 1, -1);
+        if (\preg_match('/^' . static::MATCH_QUERY_RESULT . '$/xu', $value)) {
+            $value = \substr($value, 1, -1);
 
             return new JSONPathToken(JSONPathToken::T_QUERY_RESULT, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_QUERY_MATCH . '$/xu', $value)) {
-            $value = substr($value, 2, -1);
+        if (\preg_match('/^' . static::MATCH_QUERY_MATCH . '$/xu', $value)) {
+            $value = \substr($value, 2, -1);
 
             return new JSONPathToken(JSONPathToken::T_QUERY_MATCH, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_INDEX_IN_SINGLE_QUOTES . '$/xu', $value, $matches)) {
+        if (\preg_match('/^' . static::MATCH_INDEX_IN_SINGLE_QUOTES . '$/xu', $value, $matches)) {
             $value = $matches[1];
-            $value = trim($value);
+            $value = \trim($value);
 
             return new JSONPathToken(JSONPathToken::T_INDEX, $value);
         }
 
-        if (preg_match('/^' . static::MATCH_INDEX_IN_DOUBLE_QUOTES . '$/xu', $value, $matches)) {
+        if (\preg_match('/^' . static::MATCH_INDEX_IN_DOUBLE_QUOTES . '$/xu', $value, $matches)) {
             $value = $matches[1];
-            $value = trim($value);
+            $value = \trim($value);
 
             return new JSONPathToken(JSONPathToken::T_INDEX, $value);
         }

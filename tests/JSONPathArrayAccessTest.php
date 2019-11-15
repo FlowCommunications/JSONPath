@@ -10,7 +10,7 @@ class JSONPathArrayAccessTest extends TestCase
 {
     public function testChaining()
     {
-        $data = $this->exampleData(rand(0, 1));
+        $data = $this->exampleData(\rand(0, 1));
 
         $conferences = (new JSONPath($data))->find('.conferences.*');
         $teams = $conferences->find('..teams.*');
@@ -31,7 +31,7 @@ class JSONPathArrayAccessTest extends TestCase
 
     public function testIterating()
     {
-        $data = $this->exampleData(rand(0, 1));
+        $data = $this->exampleData(\rand(0, 1));
 
         $conferences = (new JSONPath($data))->find('.conferences.*');
 
@@ -50,7 +50,7 @@ class JSONPathArrayAccessTest extends TestCase
 
     public function testDifferentStylesOfAccess()
     {
-        $data = $this->exampleData(rand(0, 1));
+        $data = $this->exampleData(\rand(0, 1));
 
         $league = new JSONPath($data);
 
@@ -99,7 +99,7 @@ class JSONPathArrayAccessTest extends TestCase
             ]
         ];
 
-        return $asArray ? $data : json_decode(json_encode($data));
+        return $asArray ? $data : \json_decode(\json_encode($data));
 
     }
 }

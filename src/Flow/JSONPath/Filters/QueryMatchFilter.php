@@ -19,7 +19,7 @@ class QueryMatchFilter extends AbstractFilter
     {
         $return = [];
 
-        preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->token->value, $matches);
+        \preg_match('/^' . static::MATCH_QUERY_OPERATORS . '$/x', $this->token->value, $matches);
 
         if (!isset($matches[1])) {
             throw new \Exception("Malformed filter query");
@@ -34,18 +34,18 @@ class QueryMatchFilter extends AbstractFilter
         $operator = isset($matches['operator']) ? $matches['operator'] : null;
         $comparisonValue   = isset($matches['comparisonValue']) ? $matches['comparisonValue'] : null;
 
-        if (strtolower($comparisonValue) === "false") {
+        if (\strtolower($comparisonValue) === "false") {
             $comparisonValue = false;
         }
-        if (strtolower($comparisonValue) === "true") {
+        if (\strtolower($comparisonValue) === "true") {
             $comparisonValue = true;
         }
-        if (strtolower($comparisonValue) === "null") {
+        if (\strtolower($comparisonValue) === "null") {
             $comparisonValue = null;
         }
 
-        $comparisonValue = preg_replace('/^[\'"]/', '', $comparisonValue);
-        $comparisonValue = preg_replace('/[\'"]$/', '', $comparisonValue);
+        $comparisonValue = \preg_replace('/^[\'"]/', '', $comparisonValue);
+        $comparisonValue = \preg_replace('/[\'"]$/', '', $comparisonValue);
 
         foreach ($collection as $value) {
             if (AccessHelper::keyExists($value, $key, $this->magicIsAllowed)) {

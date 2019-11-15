@@ -15,7 +15,7 @@ class JSONPathTest extends TestCase
      */
     public function testChildOperators()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find('$.store.books[0].title');
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find('$.store.books[0].title');
         $this->assertEquals('Sayings of the Century', $result[0]);
     }
 
@@ -24,7 +24,7 @@ class JSONPathTest extends TestCase
      */
     public function testChildOperatorsAlt()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][0]['title']");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$['store']['books'][0]['title']");
         $this->assertEquals('Sayings of the Century', $result[0]);
     }
 
@@ -34,7 +34,7 @@ class JSONPathTest extends TestCase
     public function testFilterSliceA()
     {
         // Copy all items... similar to a wildcard
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$['store']['books'][:].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$['store']['books'][:].title");
         $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick', 'The Lord of the Rings'], $result->data());
     }
 
@@ -146,7 +146,7 @@ class JSONPathTest extends TestCase
      */
     public function testChildQuery()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[(@.length-1)].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$.store.books[(@.length-1)].title");
         $this->assertEquals(['The Lord of the Rings'], $result->data());
     }
 
@@ -156,7 +156,7 @@ class JSONPathTest extends TestCase
      */
     public function testQueryMatchLessThan()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[?(@.price < 10)].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$.store.books[?(@.price < 10)].title");
         $this->assertEquals(['Sayings of the Century', 'Moby Dick'], $result->data());
     }
 
@@ -166,7 +166,7 @@ class JSONPathTest extends TestCase
      */
     public function testQueryMatchEquals()
     {
-        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author == "J. R. R. Tolkien")].title');
+        $results = (new JSONPath($this->exampleData(\rand(0, 1))))->find('$..books[?(@.author == "J. R. R. Tolkien")].title');
         $this->assertEquals($results[0], 'The Lord of the Rings');
     }
 
@@ -176,7 +176,7 @@ class JSONPathTest extends TestCase
      */
     public function testQueryMatchEqualsWithUnquotedInteger()
     {
-        $results = (new JSONPath($this->exampleDataWithSimpleIntegers(rand(0, 1))))->find('$..features[?(@.value = 1)]');
+        $results = (new JSONPath($this->exampleDataWithSimpleIntegers(\rand(0, 1))))->find('$..features[?(@.value = 1)]');
         $this->assertEquals($results[0]->name, "foo");
         $this->assertEquals($results[1]->name, "baz");
     }
@@ -187,15 +187,15 @@ class JSONPathTest extends TestCase
      */
     public function testQueryMatchNotEqualsTo()
     {
-        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author != "J. R. R. Tolkien")].title');
+        $results = (new JSONPath($this->exampleData(\rand(0, 1))))->find('$..books[?(@.author != "J. R. R. Tolkien")].title');
         $this->assertcount(3, $results);
         $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
 
-        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author !== "J. R. R. Tolkien")].title');
+        $results = (new JSONPath($this->exampleData(\rand(0, 1))))->find('$..books[?(@.author !== "J. R. R. Tolkien")].title');
         $this->assertcount(3, $results);
         $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
 
-        $results = (new JSONPath($this->exampleData(rand(0, 1))))->find('$..books[?(@.author <> "J. R. R. Tolkien")].title');
+        $results = (new JSONPath($this->exampleData(\rand(0, 1))))->find('$..books[?(@.author <> "J. R. R. Tolkien")].title');
         $this->assertcount(3, $results);
         $this->assertEquals(['Sayings of the Century', 'Sword of Honour', 'Moby Dick'], [$results[0], $results[1], $results[2]]);
     }
@@ -205,7 +205,7 @@ class JSONPathTest extends TestCase
      */
     public function testWildcardAltNotation()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.books[*].author");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$.store.books[*].author");
         $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result->data());
     }
 
@@ -214,7 +214,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveChildSearch()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..author");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..author");
         $this->assertEquals(['Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien'], $result->data());
     }
 
@@ -225,14 +225,14 @@ class JSONPathTest extends TestCase
      */
     public function testWildCard()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store.*");
-        if (is_object($result[0][0])) {
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$.store.*");
+        if (\is_object($result[0][0])) {
             $this->assertEquals('Sayings of the Century', $result[0][0]->title);
         } else {
             $this->assertEquals('Sayings of the Century', $result[0][0]['title']);
         }
 
-        if (is_object($result[1])) {
+        if (\is_object($result[1])) {
             $this->assertEquals('red', $result[1]->color);
         } else {
             $this->assertEquals('red', $result[1]['color']);
@@ -245,7 +245,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveChildSearchAlt()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$.store..price");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$.store..price");
         $this->assertEquals([8.95, 12.99, 8.99, 22.99, 19.95], $result->data());
     }
 
@@ -255,7 +255,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveChildSearchWithChildIndex()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[2].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..books[2].title");
         $this->assertEquals(["Moby Dick"], $result->data());
     }
 
@@ -264,7 +264,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveChildSearchWithChildQuery()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[(@.length-1)].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..books[(@.length-1)].title");
         $this->assertEquals(["The Lord of the Rings"], $result->data());
     }
 
@@ -274,7 +274,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveChildSearchWithSliceFilter()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[-1:].title");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..books[-1:].title");
         $this->assertEquals(["The Lord of the Rings"], $result->data());
     }
 
@@ -284,7 +284,7 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveWithQueryMatch()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..books[?(@.isbn)].isbn");
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..books[?(@.isbn)].isbn");
 
         $this->assertEquals(['0-553-21311-3', '0-395-19395-8'], $result->data());
     }
@@ -295,8 +295,8 @@ class JSONPathTest extends TestCase
      */
     public function testRecursiveWithWildcard()
     {
-        $result = (new JSONPath($this->exampleData(rand(0, 1))))->find("$..*");
-        $result = json_decode(json_encode($result), true);
+        $result = (new JSONPath($this->exampleData(\rand(0, 1))))->find("$..*");
+        $result = \json_decode(\json_encode($result), true);
 
         $this->assertEquals('Sayings of the Century', $result[0]['books'][0]['title']);
         $this->assertEquals(19.95, $result[26]);
@@ -388,9 +388,9 @@ class JSONPathTest extends TestCase
                 ["name" => "B", "type" => "type of B"],
             ],
         ];
-        $data = json_encode($data);
+        $data = \json_encode($data);
 
-        $jsonIterator = new JSONPath(json_decode($data));
+        $jsonIterator = new JSONPath(\json_decode($data));
 
         /** @var JSONPath $route */
         $route = $jsonIterator->offsetGet('route');
@@ -442,7 +442,7 @@ class JSONPathTest extends TestCase
      */
     public function testTrailingComma()
     {
-        $jsonPath = new JSONPath(json_decode('{"store":{"book":[{"category":"reference","author":"Nigel Rees","title":"Sayings of the Century","price":8.95},{"category":"fiction","author":"Evelyn Waugh","title":"Sword of Honour","price":12.99},{"category":"fiction","author":"Herman Melville","title":"Moby Dick","isbn":"0-553-21311-3","price":8.99},{"category":"fiction","author":"J. R. R. Tolkien","title":"The Lord of the Rings","isbn":"0-395-19395-8","price":22.99}],"bicycle":{"color":"red","price":19.95}},"expensive":10}'));
+        $jsonPath = new JSONPath(\json_decode('{"store":{"book":[{"category":"reference","author":"Nigel Rees","title":"Sayings of the Century","price":8.95},{"category":"fiction","author":"Evelyn Waugh","title":"Sword of Honour","price":12.99},{"category":"fiction","author":"Herman Melville","title":"Moby Dick","isbn":"0-553-21311-3","price":8.99},{"category":"fiction","author":"J. R. R. Tolkien","title":"The Lord of the Rings","isbn":"0-395-19395-8","price":22.99}],"bicycle":{"color":"red","price":19.95}},"expensive":10}'));
 
         $result = $jsonPath->find("$..book[0,1,2,]");
 
@@ -454,7 +454,7 @@ class JSONPathTest extends TestCase
      */
     public function testNegativeIndex()
     {
-        $jsonPath = new JSONPath(json_decode('{"store":{"book":[{"category":"reference","author":"Nigel Rees","title":"Sayings of the Century","price":8.95},{"category":"fiction","author":"Evelyn Waugh","title":"Sword of Honour","price":12.99},{"category":"fiction","author":"Herman Melville","title":"Moby Dick","isbn":"0-553-21311-3","price":8.99},{"category":"fiction","author":"J. R. R. Tolkien","title":"The Lord of the Rings","isbn":"0-395-19395-8","price":22.99}],"bicycle":{"color":"red","price":19.95}},"expensive":10}'));
+        $jsonPath = new JSONPath(\json_decode('{"store":{"book":[{"category":"reference","author":"Nigel Rees","title":"Sayings of the Century","price":8.95},{"category":"fiction","author":"Evelyn Waugh","title":"Sword of Honour","price":12.99},{"category":"fiction","author":"Herman Melville","title":"Moby Dick","isbn":"0-553-21311-3","price":8.99},{"category":"fiction","author":"J. R. R. Tolkien","title":"The Lord of the Rings","isbn":"0-395-19395-8","price":22.99}],"bicycle":{"color":"red","price":19.95}},"expensive":10}'));
 
         $result = $jsonPath->find("$..book[-2]");
 
@@ -463,7 +463,7 @@ class JSONPathTest extends TestCase
 
     public function testQueryAccessWithNumericalIndexes()
     {
-        $jsonPath = new JSONPath(json_decode('{
+        $jsonPath = new JSONPath(\json_decode('{
             "result": {
                 "list": [
                     {
@@ -482,7 +482,7 @@ class JSONPathTest extends TestCase
 
         $this->assertEquals("11.51000", $result[0]->o);
 
-        $jsonPath = new JSONPath(json_decode('{
+        $jsonPath = new JSONPath(\json_decode('{
             "result": {
                 "list": [
                     [
@@ -543,7 +543,7 @@ class JSONPathTest extends TestCase
             }
           }
         }';
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
     public function exampleDataExtra($asArray = true)
@@ -561,7 +561,7 @@ class JSONPathTest extends TestCase
             }
         ';
 
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
 
@@ -582,7 +582,7 @@ class JSONPathTest extends TestCase
             }
         ';
 
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
 
@@ -600,7 +600,7 @@ class JSONPathTest extends TestCase
             }
         ';
 
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
     public function exampleDataWithSimpleIntegers($asArray = true)
@@ -611,7 +611,7 @@ class JSONPathTest extends TestCase
             }
         ';
 
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
 

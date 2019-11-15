@@ -15,7 +15,7 @@ class QueryResultFilter extends AbstractFilter
     {
         $result = [];
 
-        preg_match('/@\.(?<key>\w+)\s*(?<operator>-|\+|\*|\/)\s*(?<numeric>\d+)/', $this->token->value, $matches);
+        \preg_match('/@\.(?<key>\w+)\s*(?<operator>-|\+|\*|\/)\s*(?<numeric>\d+)/', $this->token->value, $matches);
 
         $matchKey = $matches['key'];
 
@@ -23,7 +23,7 @@ class QueryResultFilter extends AbstractFilter
             $value = AccessHelper::getValue($collection, $matchKey, $this->magicIsAllowed);
         } else {
             if ($matches['key'] === 'length') {
-                $value = count($collection);
+                $value = \count($collection);
             } else {
                 return;
             }

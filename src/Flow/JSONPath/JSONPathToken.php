@@ -34,7 +34,7 @@ class JSONPathToken
 
     public function validateType($type)
     {
-        if (!in_array($type, static::getTypes(), true)) {
+        if (!\in_array($type, static::getTypes(), true)) {
             throw new JSONPathException('Invalid token: ' . $type);
         }
     }
@@ -59,9 +59,9 @@ class JSONPathToken
      */
     public function buildFilter($options)
     {
-        $filterClass = 'Flow\\JSONPath\\Filters\\' . ucfirst($this->type) . 'Filter';
+        $filterClass = 'Flow\\JSONPath\\Filters\\' . \ucfirst($this->type) . 'Filter';
 
-        if (! class_exists($filterClass)) {
+        if (! \class_exists($filterClass)) {
             throw new JSONPathException("No filter class exists for token [{$this->type}]");
         }
 

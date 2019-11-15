@@ -14,7 +14,7 @@ class SliceFilter extends AbstractFilter
     {
         $result = [];
 
-        $length = count($collection);
+        $length = \count($collection);
         $start  = $this->token->value['start'];
         $end    = $this->token->value['end'];
         $step   = $this->token->value['step'] ?: 1;
