@@ -3,10 +3,11 @@ namespace Flow\JSONPath\Test;
 
 use Flow\JSONPath\JSONPathLexer;
 use Flow\JSONPath\JSONPathToken;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
+class JSONPathLexerTest extends TestCase
 {
     public function test_Index_Wildcard()
     {
@@ -89,7 +90,7 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['start' => 0, 'end' => 1, 'step' => 2], $tokens[0]->value);
     }
 
-    public function test_Slice_NegativeIndex()
+    public function test_Index_NegativeIndex()
     {
         $tokens = (new \Flow\JSONPath\JSONPathLexer('[-1]'))->parseExpression();
         $this->assertEquals(JSONPathToken::T_SLICE, $tokens[0]->type);
@@ -175,11 +176,6 @@ class JSONPathLexerTest extends \PHPUnit_Framework_TestCase
         $tokens = (new JSONPathLexer('[ 1,2 , 3]'))->parseExpression();
         $this->assertEquals(JSONPathToken::T_INDEXES, $tokens[0]->type);
         $this->assertEquals([1,2,3], $tokens[0]->value);
-    }
-
-    public function test_Root_Expression()
-    {
-        $tokens = (new JSONPathLexer('$'));
     }
 
 
