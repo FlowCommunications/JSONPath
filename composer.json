@@ -9,12 +9,14 @@
         }
     ],
     "autoload": {
-      "psr-0": {
-        "Flow\\JSONPath": "src/"
+      "psr-4": {
+        "Flow\\JSONPath\\": "src/Flow/JSONPath/"
       }
     },
     "autoload-dev": {
-      "classmap": ["tests/"]
+      "psr-4": {
+        "Flow\\JSONPath\\Test\\": "tests/"
+      }
     },
     "require": {
       "php": ">=5.4.0"
