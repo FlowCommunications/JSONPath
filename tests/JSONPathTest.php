@@ -289,6 +289,18 @@ class JSONPathTest extends TestCase
         $this->assertEquals(['0-553-21311-3', '0-395-19395-8'], $result->data());
     }
 
+	/**
+	 * .data.tokens[?(@.Employee.FirstName)]
+	 * Verify that it is possible to filter with a key containing punctuation
+	 */
+	public function testRecursiveWithQueryMatchWithDots()
+	{
+		$result = (new JSONPath($this->exampleDataWithDots(rand(0, 1))))->find(".data.tokens[?(@.Employee.FirstName)]");
+		$result = json_decode(json_encode($result), true);
+
+		$this->assertEquals([['Employee.FirstName' => 'Jack']], $result);
+	}
+
     /**
      * $..*
      * All members of JSON structure
@@ -602,6 +614,29 @@ class JSONPathTest extends TestCase
 
         return json_decode($json, $asArray);
     }
+
+    public function exampleDataWithDots($asArray = true)
+	{
+		$json = '
+			{
+				"data": {
+					"tokens": [
+						{
+						  "Employee.FirstName": "Jack"
+						},
+						{
+						  "Employee.LastName": "Daniels"
+						},
+						{
+						  "Employee.Email": "jd@example.com"
+						}
+					]
+				}
+			}
+		';
+
+		return json_decode($json, $asArray);
+	}
 
     public function exampleDataWithSimpleIntegers($asArray = true)
     {

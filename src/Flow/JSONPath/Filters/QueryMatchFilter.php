@@ -6,7 +6,7 @@ use Flow\JSONPath\AccessHelper;
 class QueryMatchFilter extends AbstractFilter
 {
     const MATCH_QUERY_OPERATORS = '
-    @(\.(?<key>\w+)|\[["\']?(?<keySquare>.*?)["\']?\])
+    @(\.(?<key>[^ =]+)|\[["\']?(?<keySquare>.*?)["\']?\])
     (\s*(?<operator>==|=|<>|!==|!=|>|<)\s*(?<comparisonValue>.+))?
     ';
 
