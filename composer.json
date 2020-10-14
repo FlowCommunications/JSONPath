@@ -1,5 +1,6 @@
 {
     "name": "flow/jsonpath",
+    "abandoned": "softcreatr/jsonpath",
     "description": "JSONPath implementation for parsing, searching and flattening arrays",
     "license": "MIT",
     "authors": [

@@ -1,3 +1,7 @@
+# :exclamation: New project maintainers :exclamation:
+
+This project is no longer maintained here. Please go to https://github.com/SoftCreatR/JSONPath.
+
 JSONPath [![Build Status](https://travis-ci.org/FlowCommunications/JSONPath.svg?branch=master)](https://travis-ci.org/FlowCommunications/JSONPath)
 =============
 
@@ -24,7 +28,7 @@ composer require flow/jsonpath
 
 Support for PHP 5.x is deprecated... the current version should work but all unit tests are run against 7.1+ and support may be dropped at any time in the future.
 
-A legacy branch is maintained in `php-5.x` and can be composer-installed as follows:  
+A legacy branch is maintained in `php-5.x` and can be composer-installed as follows:
 `"flow/jsonpath": "dev-php-5.x"`
 
 JSONPath Examples
@@ -106,7 +110,7 @@ So here are the types of query expressions that are supported:
 	[?(@.title == "A string")] //
 	[?(@.title = "A string")]
 	// A single equals is not an assignment but the SQL-style of '=='
-	
+
 Known issues
 ------
 - This project has not implemented multiple string indexes eg. `$[name,year]` or `$["name","year"]`. I have no ETA on that feature and it would require some re-writing of the parser that uses a very basic regex implementation.
@@ -117,7 +121,7 @@ Similar projects
 
 [JMESPath](https://github.com/jmespath) does similiar things, is full of features and has a PHP implementation
 
-The [Hash](http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html) utility from CakePHP does some similar things 
+The [Hash](http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html) utility from CakePHP does some similar things
 
 The original JsonPath implementations is available at [http://code.google.com/p/jsonpath]() and re-hosted for composer
 here [Peekmo/JsonPath](https://github.com/Peekmo/JsonPath).
